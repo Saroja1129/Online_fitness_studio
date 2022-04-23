@@ -207,12 +207,12 @@ foreign key	(session_client_id) references client(client_id) on delete cascade o
 );
 
 INSERT into client VALUES
-('123456','name1.last@gmail.com','a81dbbb32d5403b960215d29c2ed27f7f3338c327ce98ec88fe22348f2d9b003','Name1Last',1234567890,33.6,180,180,25,'MALE','A23675'), -- password1
-('123457','name2.last@gmail.com','2435d53486947696b68493fff95f2a48a3f36fa7c5c03496c71e7000ef62f953','Name2Last',1234567891,26.6,170,170,23,'MALE','A23655'), -- password2
-('123458','name3.last@gmail.com','1fc8ee2f3002e0b4c28f1935dbef9b0e8683b3717294ea5f448a53278b60cc42','Name3Last',1234567892,25.1,130,165,21,'FEMALE','A23735'),-- password3
-('123459','name4.last@gmail.com','1b26e0d4ad352a127cb5b7c8e17d457b38da0f3d7289602ab6270c6c24abf9fa','Name4Last',1234567893,20.6,170,150,22,'MALE','A23795'),-- password4
-('123460','name5.last@gmail.com','53d3737ccc46d651b356c0e39c70f884b9e72d3755f8392fbf8471dd189eaee8','Name5Last',1234567894,18.6,120,122,18,'FEMALE','A23775'),-- password5
-('123461','name6.last@gmail.com','751778c8e21fa4ae0a83aef584ae2a32e1bad66e7412bc6633c59dc3b55c5e6b','Name6Last',1234567895,13.6,120,122,21,'MALE','A23895');-- password6
+('123456','name1.last@gmail.com','a81dbbb32d5403b960215d29c2ed27f7f3338c327ce98ec88fe22348f2d9b003','Name1Last',1234567890,33.6,180,180,25,'MALE','A23675', NULL), -- password1
+('123457','name2.last@gmail.com','2435d53486947696b68493fff95f2a48a3f36fa7c5c03496c71e7000ef62f953','Name2Last',1234567891,26.6,170,170,23,'MALE','A23655', NULL), -- password2
+('123458','name3.last@gmail.com','1fc8ee2f3002e0b4c28f1935dbef9b0e8683b3717294ea5f448a53278b60cc42','Name3Last',1234567892,25.1,130,165,21,'FEMALE','A23735', NULL),-- password3
+('123459','name4.last@gmail.com','1b26e0d4ad352a127cb5b7c8e17d457b38da0f3d7289602ab6270c6c24abf9fa','Name4Last',1234567893,20.6,170,150,22,'MALE','A23795', NULL),-- password4
+('123460','name5.last@gmail.com','53d3737ccc46d651b356c0e39c70f884b9e72d3755f8392fbf8471dd189eaee8','Name5Last',1234567894,18.6,120,122,18,'FEMALE','A23775', NULL),-- password5
+('123461','name6.last@gmail.com','751778c8e21fa4ae0a83aef584ae2a32e1bad66e7412bc6633c59dc3b55c5e6b','Name6Last',1234567895,13.6,120,122,21,'MALE','A23895', NULL);-- password6
 
 INSERT into admin VALUES
 ('kyra_Foerster','kyra.foerster@gmail.com','A23795',100000,'cbb417b7d2b7a5f3bef3c5ef98e662a13986bfc394684d5981b8512b814a84ac','123459'), -- kyra
