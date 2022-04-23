@@ -2,20 +2,39 @@ import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 
+
 from tkinter import *
 from subprocess import call
+from hashlib import pbkdf2_hmac # for hash function
 from PIL import *
+
+#Change here for your local DB password
+local_DB_Password = "password"
+
 
 def Register():
             Admin.destroy()
             #call client Registration page instead of admin
             call(["python","adminHome.py"])
             return True
-    
+
+# Hash incoming passwords 
+def hashPassword(passw):
+
+    iter = 500_000 
+
+    #Convert password (string) into byte
+    passw_b = str.encode(passw)
+    hash = pbkdf2_hmac('sha256', passw_b, b'salt'*2, iter)
+
+    return str(hash.hex())
+
+
 def submitact():
       
     user = Username.get()
     passw = Password.get()
+    passw = hashPassword(passw)      
     a=clicked.get()
     
 
@@ -23,7 +42,7 @@ def submitact():
         msgbox.showinfo("Insert status","all fields are required")
     elif(a=='Admin'):
         # Update user and password
-        con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio") 
+        con=mysql.connect(host="localhost",user="root",password=local_DB_Password, db="fitnessstudio") 
         cursor=con.cursor()
         cursor.execute("select * from admin where admin_email = %s and admin_pwd=%s", [(user),(passw)] )
         results=cursor.fetchall()
@@ -38,7 +57,7 @@ def submitact():
         
     elif(a=='Client'):
             # Update user and password
-        con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio") 
+        con=mysql.connect(host="localhost",user="root",password = local_DB_Password,db="fitnessstudio") 
         cursor=con.cursor()
         cursor.execute("select * from client where client_email = %s and client_pwd =%s", [(user),(passw)] )
         results=cursor.fetchall()
@@ -54,7 +73,7 @@ def submitact():
     
     elif(a=='Advisor'):
             # Update user and password
-        con=mysql.connect(host="localhost",user="root",password="sarayu123",db="fitnessstudio") 
+        con=mysql.connect(host="localhost",user="root",password = local_DB_Password,db="fitnessstudio") 
         cursor=con.cursor()
         cursor.execute("select * from advisor where email = %s and password =%s", [(user),(passw)] )
         results=cursor.fetchall()
@@ -68,24 +87,23 @@ def submitact():
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
             return False
     
-    # elif(a=='Instructor'):
-    #         # Update user and password
-    #     con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio") 
-    #     cursor=con.cursor()
-    #     cursor.execute("select * from instructor where email = %s and password =%s", [(user),(passw)] )
-    #     results=cursor.fetchall()
-    #     if results:
-    #         msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
-    #         Admin.destroy()
-    #         #call client home_page instead of admin
-    #         call(["python","adminHome.py"])
-    #         return True
-    #     else:
-    #         msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
-    #         return False    
+    elif(a=='Instructor'):
+             # Update user and password
+         con=mysql.connect(host="localhost",user="root",password = local_DB_Password,db="fitnessstudio") 
+         cursor=con.cursor()
+         cursor.execute("select * from Instructor where email = %s and Password =%s", [(user),(passw)] )
+         results=cursor.fetchall()
+         if results:
+             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
+             Admin.destroy()
+             
+             call(["python","adminHome.py"]) # TODO call client home_page instead of admin
+             return True
+         else:
+             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
+             return False    
                 
-    
-            
+           
             
 Admin=tk.Tk()
 Admin.title("Fitness_Studio")
