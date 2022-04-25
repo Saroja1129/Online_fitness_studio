@@ -1,3 +1,4 @@
+   
 drop database if exists fitnessstudio;
 create database fitnessstudio;
 use fitnessstudio;
@@ -191,11 +192,11 @@ on update cascade
 
 create table training_session 
 (
-session_id	varchar(6) not null, 
-session_zoom_link	varchar(100) not null,
 session_instructor_name	varchar(30),
-session_type	boolean,
-session_invididual_group	boolean,
+session_type	varchar(20),
+session_invididual_group	varchar(20),
+session_zoom_link	varchar(100) not null,
+session_id	varchar(6) not null, 
 session_admin_id	varchar(6),
 session_client_id	varchar(6),
 session_instructor_id	varchar (6), 
@@ -317,12 +318,12 @@ insert into Workouts values ('123461','A00003','1','Whole Body 1');
 insert into Workouts values ('123461','A00003','1','Whole Body 2');
 
 
-insert into training_session values ('110000', 'http://www.zoom.com/110000', 'Kyra', TRUE, TRUE, 'A23795', '123459', 'A00010');
-insert into training_session values ('120000', 'http://www.zoom.com/120000', 'Saroja', TRUE, TRUE, 'A23655', '123457', 'A00040');
-insert into training_session values ('130000', 'http://www.zoom.com/130000', 'Vineet', TRUE, TRUE, 'A23735', '123458', 'A00050');
-insert into training_session values ('140000', 'http://www.zoom.com/140000', 'Vikas', TRUE, TRUE, 'A23675', '123456', 'A00020');
-insert into training_session values ('150000', 'http://www.zoom.com/150000', 'Jasmine', TRUE, TRUE, 'A23775', '123460', 'A00060');
-insert into training_session values ('160000', 'http://www.zoom.com/160000', 'Alex', TRUE, TRUE, 'A23895', '123461', 'A00030');
+insert into training_session values ('Kyra', 'recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', '123459', 'A00010');
+insert into training_session values ('Saroja', 'live', 'group', 'http://www.zoom.com/120000', '120000', 'A23655', '123457', 'A00040');
+insert into training_session values ('Vineet', 'recorded', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', '123458', 'A00050');
+insert into training_session values ('Vikas', 'recorded', 'group', 'http://www.zoom.com/140000', '140000', 'A23675', '123456', 'A00020');
+insert into training_session values ('Jasmine', 'live', 'individual', 'http://www.zoom.com/150000', '150000', 'A23775', '123460', 'A00060');
+insert into training_session values ('Alex', 'live', 'group', 'http://www.zoom.com/160000', '160000', 'A23895', '123461', 'A00030');
 
 alter table client add foreign key (client_admin_id) references admin(admin_id) on delete cascade on update cascade;
 alter table Instructor add foreign key (Trainer_id) references Instructor(ID) on delete set NULL;
