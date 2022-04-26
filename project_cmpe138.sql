@@ -116,21 +116,32 @@ email varchar(30),
 password varchar(65), -- password needs to be hashed/encrypted
 salary numeric(8,2), -- precision 8, scale 2 can represent 123456.78
 jobType varchar(12),
-adv_clientID  varchar(6),      -- pulled from client to satisfy can be adv relationship, fill same data as Vineet
-unique (email),
 primary key (ID),
-foreign key(adv_clientID) references client(client_id) 
-on delete cascade 
+unique(email)
+);
+
+create table advises(
+clientID varchar(6),
+advID varchar(6),
+primary key(clientID, advID),
+foreign key(clientID) references client(client_id)
+on delete cascade
+on update cascade,
+foreign key(advID) references advisor(ID)
+on delete cascade
 on update cascade
 );
 
 create table dietary_plan
 (
-goal varchar(20),
 diet_plan_ID varchar(5),
 dietitianID varchar(6),
+clientID varchar(6),
 primary key(diet_plan_ID),
 foreign key(dietitianID) references advisor(ID)
+on delete cascade
+on update cascade,
+foreign key(clientID) references client(client_id)
 on delete cascade
 on update cascade
 );
@@ -138,9 +149,9 @@ on update cascade
 create table plan_macronutrients
 (
 diet_plan_ID_macro varchar(5),
-protein numeric(3,0),  -- e.g. 100 g per day
-carbs numeric(3,0),
-fat numeric(3,0),
+protein numeric(3,0) default 0,  -- e.g. 100 g per day 
+carbs numeric(3,0) default 0,
+fat numeric(3,0) default 0,
 primary key(diet_plan_ID_macro, protein, carbs, fat),
 foreign key(diet_plan_ID_macro) references dietary_plan(diet_plan_ID)
 on delete cascade
@@ -178,17 +189,7 @@ on delete cascade
 on update cascade
 );
 
-create table advises(
-clientID varchar(6),
-advID varchar(6),
-primary key(clientID, advID),
-foreign key(clientID) references client(client_id)
-on delete cascade
-on update cascade,
-foreign key(advID) references advisor(ID)
-on delete cascade
-on update cascade
-);
+
 
 create table training_session 
 (
@@ -208,12 +209,12 @@ foreign key	(session_client_id) references client(client_id) on delete cascade o
 );
 
 INSERT into client VALUES
-('123456','name1.last@gmail.com','a81dbbb32d5403b960215d29c2ed27f7f3338c327ce98ec88fe22348f2d9b003','Name1Last',1234567890,33.6,180,180,25,'MALE','A23675', NULL), -- password1
-('123457','name2.last@gmail.com','2435d53486947696b68493fff95f2a48a3f36fa7c5c03496c71e7000ef62f953','Name2Last',1234567891,26.6,170,170,23,'MALE','A23655', NULL), -- password2
-('123458','name3.last@gmail.com','1fc8ee2f3002e0b4c28f1935dbef9b0e8683b3717294ea5f448a53278b60cc42','Name3Last',1234567892,25.1,130,165,21,'FEMALE','A23735', NULL),-- password3
-('123459','name4.last@gmail.com','1b26e0d4ad352a127cb5b7c8e17d457b38da0f3d7289602ab6270c6c24abf9fa','Name4Last',1234567893,20.6,170,150,22,'MALE','A23795', NULL),-- password4
-('123460','name5.last@gmail.com','53d3737ccc46d651b356c0e39c70f884b9e72d3755f8392fbf8471dd189eaee8','Name5Last',1234567894,18.6,120,122,18,'FEMALE','A23775', NULL),-- password5
-('123461','name6.last@gmail.com','751778c8e21fa4ae0a83aef584ae2a32e1bad66e7412bc6633c59dc3b55c5e6b','Name6Last',1234567895,13.6,120,122,21,'MALE','A23895', NULL);-- password6
+('123456','name1.last@gmail.com','a81dbbb32d5403b960215d29c2ed27f7f3338c327ce98ec88fe22348f2d9b003','Name1Last',1234567890,33.6,180,180,25,'MALE','A23675', 'Leave a comment'), -- password1
+('123457','name2.last@gmail.com','2435d53486947696b68493fff95f2a48a3f36fa7c5c03496c71e7000ef62f953','Name2Last',1234567891,26.6,170,170,23,'MALE','A23655', 'Leave a comment'), -- password2
+('123458','name3.last@gmail.com','1fc8ee2f3002e0b4c28f1935dbef9b0e8683b3717294ea5f448a53278b60cc42','Name3Last',1234567892,25.1,130,165,21,'FEMALE','A23735', 'Leave a comment'),-- password3
+('123459','name4.last@gmail.com','1b26e0d4ad352a127cb5b7c8e17d457b38da0f3d7289602ab6270c6c24abf9fa','Name4Last',1234567893,20.6,170,150,22,'MALE','A23795', 'Leave a comment'),-- password4
+('123460','name5.last@gmail.com','53d3737ccc46d651b356c0e39c70f884b9e72d3755f8392fbf8471dd189eaee8','Name5Last',1234567894,18.6,120,122,18,'FEMALE','A23775', 'Leave a comment'),-- password5
+('123461','name6.last@gmail.com','751778c8e21fa4ae0a83aef584ae2a32e1bad66e7412bc6633c59dc3b55c5e6b','Name6Last',1234567895,13.6,120,122,21,'MALE','A23895', 'Leave a comment');-- password6
 
 INSERT into admin VALUES
 ('kyra_Foerster','kyra.foerster@gmail.com','A23795',100000,'cbb417b7d2b7a5f3bef3c5ef98e662a13986bfc394684d5981b8512b814a84ac','123459'), -- kyra
@@ -253,47 +254,40 @@ INSERT into membership VALUES
 ('123461','Premium',350,'A23895');
 
 
-insert into advisor values ('Maria',  '468799', 'maria.pepe@gmail.com','de5a12f26a2d68db3742d326ad7ecece27dd6b2ffaf04cb2f875d009d2025e92', 40000, 'Dietitian', '123456'); -- dietitian, mpepe
-insert into advisor values ('Marco',  '555122', 'marco.polo@gmail.com','f14167a245d2053912b589ffd712e3156197402124d14327eb71c25b24171abf', 30000, 'Dietitian','123457'); -- dietitian, mpolo
-insert into advisor values ('Marike', '832594', 'marike.summer@hotmail.com','dd82c65136623e100348394d2b22f8edb051e97e34d19a52a3e4372304a318b7', 25000, 'Mental_Coach', '123456'); -- mental coach, msummer
-insert into advisor values ('Martin', '236772', 'martin.spring@yahoo.com','fa2bf2712a1bc67b4b2ef4349f8f4d4dca4c833291664fcd047be46bc51b0792', 15000, 'Mental_Coach','123458'); -- mental coach, mspring
-insert into advisor values ('Bernado', '670046', 'bernado@garces.com','84b5350abc5f0183d0c5b8c914f5d657e0b0f7398063f5a5848103f0a5432aab', 15500, 'Doctor','123456'); -- doctor, bgarces
-insert into advisor values ('Carl',  '778543', 'carl.winter@gmail.com','e7c93507f8f434b470e24f43bc592f5e1034013a11f39f76d8606d7124c44ab2', 30500, 'Doctor','123457'); -- doctor, cwinter
+insert into advisor values ('Maria',  '468799', 'maria.pepe@gmail.com','de5a12f26a2d68db3742d326ad7ecece27dd6b2ffaf04cb2f875d009d2025e92', 40000, 'Dietitian'); -- dietitian, mpepe
+insert into advisor values ('Marco',  '555122', 'marco.polo@gmail.com','f14167a245d2053912b589ffd712e3156197402124d14327eb71c25b24171abf', 30000, 'Dietitian'); -- dietitian, mpolo
+insert into advisor values ('Marike', '832594', 'marike.summer@hotmail.com','dd82c65136623e100348394d2b22f8edb051e97e34d19a52a3e4372304a318b7', 25000, 'Mental_Coach'); -- mental coach, msummer
+insert into advisor values ('Martin', '236772', 'martin.spring@yahoo.com','fa2bf2712a1bc67b4b2ef4349f8f4d4dca4c833291664fcd047be46bc51b0792', 15000, 'Mental_Coach'); -- mental coach, mspring
+insert into advisor values ('Bernado', '670046', 'bernado@garces.com','84b5350abc5f0183d0c5b8c914f5d657e0b0f7398063f5a5848103f0a5432aab', 15500, 'Doctor'); -- doctor, bgarces
+insert into advisor values ('Carl',  '778543', 'carl.winter@gmail.com','e7c93507f8f434b470e24f43bc592f5e1034013a11f39f76d8606d7124c44ab2', 30500, 'Doctor'); -- doctor, cwinter
 
-insert into advises values ('123456', '468799'); -- dietitian
-insert into advises values ('123456', '670046'); -- doctor
-insert into advises values ('123456', '832594'); -- mental_coach
-insert into advises values ('123457', '555122'); -- dietitian
-insert into advises values ('123457', '778543'); -- doctor
-insert into advises values ('123458', '236772'); -- doctor
+insert into advises values ('123457', '468799'); -- dietitian
+insert into advises values ('123457', '670046'); -- doctor
+insert into advises values ('123457', '832594'); -- mental_coach
+insert into advises values ('123461', '468799'); -- dietitian
+insert into advises values ('123461', '778543'); -- doctor
+insert into advises values ('123461', '832594'); -- mental_coach
+
+
 
 
 insert into Lab_test values('121','Mona',  '670046' );
 insert into Lab_test values('122','Diana', '778543' );
-insert into Lab_test values('123','Kishan', '670046' ); 
+
 
 insert into mental_coaching_plan values('1100', '832594');
-insert into mental_coaching_plan values('1200', '236772');
 insert into mental_coaching_plan values('1300', '832594');
 
-insert into dietary_plan values ('strength','13468','468799');
-insert into dietary_plan values ('cardio', '15444', '555122');
-insert into dietary_plan values ('cardio','12764', '468799');
-insert into dietary_plan values ('weightloss','18558', '555122'); -- keto
-insert into dietary_plan values ('weightloss','12933', '555122');
+insert into dietary_plan values ('11111','468799', '123457');
+insert into dietary_plan values ('11112', '468799', '123461');
 
 -- list the macros for diet plan xy
-insert into plan_macronutrients values ('13468', 120, 250, 65);
-insert into plan_macronutrients values ('15444', 150, 350, 50);
-insert into plan_macronutrients values ('12764', 130, 300, 80);
-insert into plan_macronutrients values ('18558', 150, 350, 50);
-insert into plan_macronutrients values ('12933', 120, 180, 55);
+insert into plan_macronutrients values ('11111', 120, 250, 65);
+insert into plan_macronutrients values ('11112', 150, 350, 50);
 
-insert into plan_supplements values ('13468', 25, 100, 1500, 2000);
-insert into plan_supplements values ('15444', 25, 250, 1500, 1500);
-insert into plan_supplements values ('12764', 25, 250, 1500, 2000);
-insert into plan_supplements values ('18558', 25, 100, 1000, 1000);
-insert into plan_supplements values ('12933', 25, 100, 1000, 1500);
+insert into plan_supplements values ('11111', 25, 100, 1500, 2000);
+insert into plan_supplements values ('11112', 25, 250, 1500, 1500);
+
 
 -- Personalized Workout Plans:
 insert into Personalized_workout_plan values ('123456','A00001','1');
