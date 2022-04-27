@@ -10,6 +10,7 @@ from PIL import *
 
 #Change here for your local DB password
 local_DB_Password = "password"
+python_alias = "python3"
 
 
 def Register():
@@ -49,7 +50,7 @@ def submitact():
         if results:
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
-            call(["python","adminHome.py"])
+            call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_Password ])
             return True
         else:
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -65,7 +66,7 @@ def submitact():
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
             #call client home_page instead of admin
-            call(["python","adminHome.py"])
+            call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_Password ])
             return True
         else:
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -81,7 +82,7 @@ def submitact():
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
             #call client home_page instead of admin
-            call(["python","adminHome.py"])
+            call([python_alias,"advisor_home.py","--input", user, "--pw", local_DB_Password ])
             return True
         else:
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -97,7 +98,7 @@ def submitact():
              msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
              Admin.destroy()
              
-             call(["python","adminHome.py"]) # TODO call client home_page instead of admin
+             call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_Password ]) # TODO call client home_page instead of admin
              return True
          else:
              msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
