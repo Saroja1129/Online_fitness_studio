@@ -3,8 +3,8 @@ import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
-usr="alex"
-pwd="alex"
+usr=
+pwd=
 
 # Get single client information
 def singleClientWP(client_id):
