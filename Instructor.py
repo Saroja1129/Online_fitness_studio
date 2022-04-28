@@ -302,6 +302,9 @@ def sem_list():
 Instructor_home=tk.Tk()
 Instructor_home.title("Instructor_Home_Page")
 Instructor_home.geometry("900x900")
+Label_IH = tk.Label(Instructor_home, text ="Instructor Home for _______" )
+Label_IH.config(font=("Courier", 12))
+Label_IH.place(x = 10, y = 20)
 
 # Create Button Show My Clients
 showClients = tk.Button(Instructor_home, text ="Show My Clients",
