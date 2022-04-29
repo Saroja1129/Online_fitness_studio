@@ -74,4 +74,6 @@ submitbtn = tk.Button(Admin_home, text ="schedule Training session",
                       bg ='yellow', command=training_session)
 submitbtn.place(x = 150, y = 220, width = 150)
 
+
+
 Admin_home.mainloop()
