@@ -9,14 +9,14 @@ from hashlib import pbkdf2_hmac # for hash function
 from PIL import *
 
 #Change here for your local DB password
-local_DB_Password = "password"
+local_DB_Password = "Arti@123"
 python_alias = "python3"
 
 
 def Register():
             Admin.destroy()
             #call client Registration page instead of admin
-            call(["python","adminHome.py"])
+            call(["python","Regsiter.py"])
             return True
 
 # Hash incoming passwords 
@@ -98,7 +98,7 @@ def submitact():
              msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
              Admin.destroy()
              
-             call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_Password ]) # TODO call client home_page instead of admin
+             call([python_alias,"Instructor.py","--input", user, "--pw", local_DB_Password ]) # TODO call client home_page instead of admin
              return True
          else:
              msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
