@@ -8,7 +8,9 @@ def print_answers():
     #print("        ", value)
     value = value.lstrip("(")
     value = value.rstrip(",)")
-
+    
+    #print("============")
+    #print(value)
     if "live" in value:
         if "individual" in value:
             tkmb.showinfo("title", "Please upgrade your membership first!")
@@ -28,16 +30,23 @@ root.geometry('700x500')
 
 con=mysql.connect(host="localhost",user="root",password="password",db="fitnessstudio")
 cursor=con.cursor()
-cursor.execute("select * from training_session")
+cursor.execute("select instructor.name, session_type, session_individual_group, session_zoom_link, training_session.session_id, session_instructor_id, client_id \
+from training_session join training_session_client join instructor \
+where training_session.session_id = training_session_client.session_id \
+and training_session.session_instructor_id = instructor.ID")
+
 results=cursor.fetchall()
 
 option_item_list = list()
 result_list = list()
 
 for item in results:
-    items = list()
-    items.append(item[0:3])
-    option_item_list.append(items)
+    #print("============", item)
+    #print(item
+    #items = list()
+    #items.append(item[0:3])
+    #option_item_list.append(items)
+    option_item_list.append(item[0:3])
     result_list.append(item[0:4])
 
 value_inside = tk.StringVar(root)
