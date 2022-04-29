@@ -20,44 +20,47 @@ def assign(connection):
 
     # Create Button to log diet plan values with pressing OK
     createOKButton = tk.Button(addClient, text ="Ok",
-                       bg ='grey', command=lambda:input(addClient , connection, clientIDEntry)) # pass result to check for empty
+                       bg ='grey', command=lambda:input( connection, clientIDEntry)) # pass result to check for empty
     createOKButton.place(x = 850, y = 290, width = 50)
 
 
 
-def input(addClient,connection, clientIDEntry):
-    print("yes")
+def input(connection, clientIDEntry):
+
     client_id = clientIDEntry.get()
 
     my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password , database="fitnessstudio" )
     connection = my_connect.cursor()
 
-    # Check if client has premium membership and return all current advisors
-    query = "select clientID, advID, jobType \
-    from advises join advisor \
-    on advisor.ID = advID \
-    where clientID = "+  "'" + str(client_id) + "'" +" and clientID in(select mem_client_id from  membership where mem_level = 'Premium')"
 
-    print (query)
+    # Check if client has premium membership 
+    query = "select mem_client_id, count(clientID) \
+            from membership left join advises \
+            on mem_client_id = clientID \
+            where mem_level = 'Premium' \
+            group by mem_client_id"
+
+
     connection.execute(query)
-
-    print("pos exe")
 
     result = connection.fetchall()
 
-    for x in result:
-        print(x)
-        
 
-    # Check if all job types are different and max of 3 advisors
-    for i in range(0,(len(result)-1)):
-        if (len(result) <= 3 and result[i][2] != result[i+1][2] ):
-            
+    totalAdvisors = 0
+    
+    for i in range(0,len(result)):
+        if(str(client_id)== i):
+            totalAdvisors = result[i][1]
+    
+    # Check if only max 3 advisors for 1 client
+    if totalAdvisors < 4:
+
             # A new advisor can only be assigned if not already 3 advisors are assigned to one client
             query = "insert into advises values ("+ "'" + str(client_id) + "'"+", "+"'" + str(userID) + "'"+")"
-        else:
-            print("Requirements not satisfied! ")
+            
+            connection.execute(query)
 
+ 
 
 
 # Add client home page
