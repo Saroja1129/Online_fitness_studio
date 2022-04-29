@@ -98,7 +98,8 @@ userID = userID[0][0]
 query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
 client_email, client_mobile \
 from client \
-where client_id in(select clientID from advises where advID = " +  "'" + str(userID) + "'" + " and clientID in(select mem_client_id from membership where mem_level = 'Premium'))" 
+where client_id in(select clientID from advises where advID = " +  "'" + str(userID) + "'" +" )" 
+
 
 connection.execute(query)
 
