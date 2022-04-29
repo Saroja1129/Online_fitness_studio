@@ -1,7 +1,10 @@
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
+
 from tkinter import *
+from subprocess import call
+from PIL import *
 import argparse
 
 # pass current user information
@@ -11,10 +14,10 @@ parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
-LocalDbPassword="Arti@123"
+# LocalDbPassword="Arti@123"
 
 def getclient():
-    con=mysql.connect(host="localhost",user="root",password=LocalDbPassword,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -35,7 +38,7 @@ def getclient():
 def getinstructor():
     
     # Update user and password 
-    con=mysql.connect(host="localhost",user="root",password=LocalDbPassword,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -57,7 +60,7 @@ def getinstructor():
 def getadmin():
     
     # Update user and password 
-    con=mysql.connect(host="localhost",user="root",password=LocalDbPassword,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -78,7 +81,7 @@ def getadmin():
        
 def submitact():
     a=Name.get() #sessio_name
-    con=mysql.connect(host="localhost",user="root",password=LocalDbPassword,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor() 
     cursor.execute("select session_id from training_session order by session_id")
     results = cursor.fetchall()
@@ -103,7 +106,7 @@ def submitact():
     print(h)
     
     try:
-      con=mysql.connect(host="localhost",user="root",password=LocalDbPassword,db="fitnessstudio")
+      con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
       cursor=con.cursor()
       print("insert into training_session values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
       #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
@@ -168,5 +171,6 @@ client.place(x = 350, y = 500, width = 200)
 
 submitbtn = tk.Button(Tran_ses, text ="CREATE_SEMINAR", bg ='blue',command =submitact)
 submitbtn.place(x = 350, y = 600, width = 150)
+
 
 Tran_ses.mainloop()
