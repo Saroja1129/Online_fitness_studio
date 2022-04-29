@@ -108,7 +108,7 @@ def submitact():
             
 Admin=tk.Tk()
 Admin.title("Fitness_Studio")
-Admin.geometry("900x900")
+Admin.geometry("1300x900")
 
 Label_IH = tk.Label(Admin, text ="Welcome To Onilne Fitness Studio" )
 Label_IH.config(font=("Courier", 30))
