@@ -1,4 +1,3 @@
-   
 drop database if exists fitnessstudio;
 create database fitnessstudio;
 use fitnessstudio;
@@ -193,19 +192,25 @@ on update cascade
 
 create table training_session 
 (
-session_instructor_name	varchar(30),
 session_type	varchar(20),
-session_invididual_group	varchar(20),
+session_individual_group	varchar(20),
 session_zoom_link	varchar(100) not null,
 session_id	varchar(6) not null, 
 session_admin_id	varchar(6),
-session_client_id	varchar(6),
 session_instructor_id	varchar (6), 
 primary key	(session_id),
 unique	(session_zoom_link),
 foreign key	(session_admin_id) references admin(admin_id) on delete cascade on update cascade,
-foreign key	(session_instructor_id) references Instructor(ID) on delete cascade on update cascade,
-foreign key	(session_client_id) references client(client_id) on delete cascade on update cascade
+foreign key	(session_instructor_id) references Instructor(ID) on delete cascade on update cascade
+);
+
+create table training_session_client 
+(
+session_id	varchar(6) not null,
+client_id	varchar(6) not null,
+primary key(session_id, client_id),
+foreign key(session_id) references training_session(session_id) on delete cascade on update cascade,
+foreign key(client_id) references client(client_id) on delete cascade on update cascade
 );
 
 INSERT into client VALUES
@@ -242,7 +247,7 @@ INSERT into Instructor VALUES
 ('A00030','Alex Zalzinayak','24000','Alex.Zalzinayak@gmail.com', '09953161148a9b09bc860b774a1a5b101f76b76274a94573717c6b14daaa7867', TRUE,FALSE,FALSE,NULL), -- azaliznyak
 ('A00040','saroja kandula','18000','saroja.kandula@gmail.com', 'a312e6736a53c42cfe92feea3701894b66d422c712e7004e84aead3394518a75',TRUE, FALSE, FALSE, 'A00002'), -- skandula
 ('A00050','vineeth kiragi','16000','vineeth.kiragi@gmail.com', 'c42280cac1856c9ce7a5a954a213c09e719a63610a9eb6c1d85532f8f73603a5', FALSE, FALSE, TRUE, 'A00001'), -- vkiradi
-('A00060','Jasmine Wang','17000','Jasmine Wang@gmail.com', 'cdfb4570b67ee7b9d100972c40cfe926ffaf058023040155fb41e3afadfc37b2', TRUE,FALSE,TRUE,'A00002'); -- jwang
+('A00060','Jasmine Wang','17000','Jasmine.Wang@gmail.com', 'cdfb4570b67ee7b9d100972c40cfe926ffaf058023040155fb41e3afadfc37b2', TRUE,FALSE,TRUE,'A00002'); -- jwang
 
 
 INSERT into membership VALUES
@@ -312,12 +317,20 @@ insert into Workouts values ('123461','A00003','1','Whole Body 1');
 insert into Workouts values ('123461','A00003','1','Whole Body 2');
 
 
-insert into training_session values ('Kyra', 'recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', '123459', 'A00010');
-insert into training_session values ('Saroja', 'live', 'group', 'http://www.zoom.com/120000', '120000', 'A23655', '123457', 'A00040');
-insert into training_session values ('Vineet', 'recorded', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', '123458', 'A00050');
-insert into training_session values ('Vikas', 'recorded', 'group', 'http://www.zoom.com/140000', '140000', 'A23675', '123456', 'A00020');
-insert into training_session values ('Jasmine', 'live', 'individual', 'http://www.zoom.com/150000', '150000', 'A23775', '123460', 'A00060');
-insert into training_session values ('Alex', 'live', 'group', 'http://www.zoom.com/160000', '160000', 'A23895', '123461', 'A00030');
+insert into training_session values ('recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', 'A00010');
+insert into training_session values ('live', 'group', 'http://www.zoom.com/120000', '120000', 'A23655', 'A00020');
+insert into training_session values ('recorded', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', 'A00030');
+insert into training_session values ('recorded', 'group', 'http://www.zoom.com/140000', '140000', 'A23675', 'A00050');
+insert into training_session values ('live', 'group', 'http://www.zoom.com/150000', '150000', 'A23775', 'A00050');
+insert into training_session values ('live', 'individual', 'http://www.zoom.com/160000', '160000', 'A23895', 'A00060');
+
+insert into training_session_client values ('110000', '123459');
+insert into training_session_client values ('120000', '123457');
+insert into training_session_client values ('130000', '123458');
+insert into training_session_client values ('140000', '123456');
+insert into training_session_client values ('150000', '123460');
+insert into training_session_client values ('160000', '123461');
+
 
 alter table client add foreign key (client_admin_id) references admin(admin_id) on delete cascade on update cascade;
 alter table Instructor add foreign key (Trainer_id) references Instructor(ID) on delete set NULL;
