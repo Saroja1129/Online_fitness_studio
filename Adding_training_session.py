@@ -14,7 +14,7 @@ parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
-# LocalDbPassword="Arti@123"
+
 
 def getclient():
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
