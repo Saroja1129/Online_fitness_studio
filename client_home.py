@@ -7,14 +7,16 @@ from subprocess import call
 from PIL import *
 import argparse
 
-# pass current user information
+#pass current user information
+ 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
-local_DB_password = args.pw
-#local_DB_password = "um41Tact$"
+python_alias="python"
+#local_DB_password = args.pw
+local_DB_password = "um41Tact$"
 
 
 
@@ -97,14 +99,37 @@ def fitness_seminars(kind):
     Rec_fitness_seminars.mainloop()
     
 def Advisor_Request():
+    #comment the next statement when uploading
+    #user="name1.last@gmail.com"
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
+    cursor=con.cursor()
+    cursor.execute("select client_id from client where client_email = %s", [(user)] )
+    results=cursor.fetchall()
+    #print(results)
+    l=len(results)
+    S = str(results[l-1]) 
+    e = int(S[2:8]) 
+    #print(e)
+    a=Adv_type.get()
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
+    cursor=con.cursor()
+    cursor.execute("select max(id) from advisor where jobType = %s", [(a)] )
+    results1=cursor.fetchall()
+    #print(results1)
+    l=len(results1)
+    S = str(results1[l-1]) 
+    f = int(S[2:8]) 
+    #print(f)
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
     cursor=con.cursor()
-    cursor.execute("insert into client (client_admin_id,client_id,client_bmi,client_email,client_pwd,client_name,client_mobile,client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                   [(adminid),(e),(bmi),(email),(password),(user),(mobile),(weight),(height),(age),(sex)])
+    cursor.execute("insert into advises (clientID,advID) values(%s,%s)",
+                   [(e),(f)])
     con.commit()
     msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
-    Admin.destroy()
-    call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_Password,"--" ])
+    Client.destroy()
+    #call(["python","Premium.py"])
+    #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
+    call([python_alias,"Client_advisor_display.py","--input", user, "--pw", local_DB_password,"--Job",a])
     
 def premium():
     Client.destroy()
@@ -121,20 +146,22 @@ Client.geometry("800x600")
 con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
 cursor=con.cursor()
 cursor.execute("select mem_level from membership join client on\
-               mem_client_id=client_id where client_email =" + "'" + str(user) +"'")
+              mem_client_id=client_id where client_email =" + "'" + str(user) +"'")
 results=cursor.fetchall()
-results=[('Basic',)]
 l=len(results)
-#print(l)
+print(l)
 S = str(results[l-1]) 
 b= S[2]
-#print(results)
+print(b)
+
 if(b=='F'):
     Type="Free"
 elif(b=='B'):
     Type="Basic"
 elif(b=='P'):
     Type="Premium"
+
+#Type="Premium"
 
 if(Type=="Free"):
     
@@ -213,7 +240,6 @@ elif(Type=="Basic"):
 
 
 elif(Type=="Premium"):
-    print(user)
     Free_User = tk.Label(Client, text =Type+" USER:", font=('bold',30) )
     Free_User .place(x = 30, y = 20)
     
@@ -257,15 +283,5 @@ elif(Type=="Premium"):
     regibutton1 = tk.Button(Client, text ="Request", font=('bold',30),
                           bg ='silver', command=Advisor_Request)
     regibutton1.place(x = 180, y = 310, width = 150, height = 50)
-    
-    
-
-
-
-
-
-
-
-
 
 Client.mainloop()
