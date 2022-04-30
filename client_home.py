@@ -7,13 +7,14 @@ from subprocess import call
 from PIL import *
 import argparse
 
-#pass current user information
+#pass current user informations
  
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
+#user="name1.last@gmail.com"
 python_alias="python"
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
@@ -63,7 +64,7 @@ def training_sessions1():
     Client.destroy()
     #call(["python","Premium.py"])
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
-    call([python_alias,"test.py ","--input", user, "--pw"])
+    call([python_alias,"training_session.py","--input", user, "--pw",local_DB_password])
     print("training")
 
 def fitness_seminars(kind):
