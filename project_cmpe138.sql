@@ -176,8 +176,12 @@ create table Lab_test(
 test_id  varchar(6) not null,
 Test_name  varchar(8),
 d_ID   varchar(6) not null,
+clientID varchar(6),
 primary key (test_id),
 foreign key (d_ID) references advisor(ID)
+on delete cascade
+on update cascade,
+foreign key(clientID) references client(client_id)
 on delete cascade
 on update cascade
 );
@@ -185,8 +189,12 @@ on update cascade
 create table mental_coaching_plan(
 M_C_plan_id  varchar(6) not null,
 M_C_ID    varchar(6) not null,
+clientID varchar(6),
 primary key (M_C_plan_id),
 foreign key (M_C_ID) references advisor(ID)
+on delete cascade
+on update cascade,
+foreign key(clientID) references client(client_id)
 on delete cascade
 on update cascade
 );
@@ -279,12 +287,12 @@ insert into advises values ('123461', '832594',0); -- mental_coach
 
 
 
-insert into Lab_test values('121','Mona',  '670046' );
-insert into Lab_test values('122','Diana', '778543' );
+insert into Lab_test values('121','Mona',  '670046' ,'123457');
+insert into Lab_test values('122','Diana', '778543','123461' );
 
 
-insert into mental_coaching_plan values('1100', '832594');
-insert into mental_coaching_plan values('1300', '832594');
+insert into mental_coaching_plan values('1100', '832594', '123457');
+insert into mental_coaching_plan values('1300', '832594', '123461');
 
 insert into dietary_plan values ('11111','468799', '123457');
 insert into dietary_plan values ('11112', '468799', '123461');
