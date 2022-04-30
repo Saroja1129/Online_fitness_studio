@@ -9,8 +9,8 @@ from hashlib import pbkdf2_hmac # for hash function
 from PIL import *
 
 #Change here for your local DB password
-local_DB_Password = "password"
-python_alias = "python3"
+local_DB_Password = "Arti@123"
+python_alias = "python"
 
 
 def Register():
@@ -108,9 +108,9 @@ def submitact():
             
 Admin=tk.Tk()
 Admin.title("Fitness_Studio")
-Admin.geometry("1300x900")
+Admin.geometry("900x900")
 
-Label_IH = tk.Label(Admin, text ="Welcome To Onilne Fitness Studio" )
+Label_IH = tk.Label(Admin, text ="Welcome To Online Fitness Studio" )
 Label_IH.config(font=("Courier", 30))
 Label_IH.place(x = 30, y = 20)
 
@@ -150,4 +150,5 @@ submitbtn1 = tk.Button(Admin, text ="Register Here",
 submitbtn1.place(x = 400, y = 500, width = 100)
 
 Admin.mainloop()
+
 
