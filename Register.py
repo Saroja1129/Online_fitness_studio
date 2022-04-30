@@ -6,11 +6,19 @@ from hashlib import pbkdf2_hmac
 from tkinter import *
 from subprocess import call
 from PIL import *
+import argparse
 
-
+#pass current user informations
 #add your local DB password here
-local_DB_Password = "um41Tact$"
-python_alias = "python3"
+parser = argparse.ArgumentParser()
+#parser.add_argument("--input", help="Current user ")
+parser.add_argument("--pw", help="Local password for DB engine")
+args = parser.parse_args()
+#user = args.input
+#user="name1.last@gmail.com"
+python_alias="python"
+local_DB_password = args.pw
+#local_DB_password = "um41Tact$"
 
 
 
@@ -47,23 +55,27 @@ def Registeration():
         msgbox.showinfo("Insert status","Passwords Dont match")
         
     else:
-        con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
-        cursor=con.cursor() 
-        cursor.execute("select max(client_id) from client")
-        results = cursor.fetchall()
+        my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
+        connection = my_connect.cursor()
+        query ="select max(client_id) from client"
+        connection.execute(query)
+        results = connection.fetchall()
+        
         #print(results)
         l=len(results)
         S = str(results[l-1]) 
         e = int(S[2:8])+1 #session_id
         #print(e)
-        con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio") 
+        con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
-        cursor.execute("insert into client (client_admin_id,client_id,client_bmi,client_email,client_pwd,client_name,client_mobile,client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        cursor.execute("insert into client (client_admin_id,client_id,client_bmi,\
+                       client_email,client_pwd,client_name,client_mobile,\
+                           client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                        [(adminid),(e),(bmi),(email),(password),(user),(mobile),(weight),(height),(age),(sex)])
         con.commit()
         membership_level="Free"
         membership_cost=0
-        con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio") 
+        con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
         cursor.execute("insert into membership (mem_client_id,mem_level,mem_cost,mem_admin_id) values(%s,%s,%s,%s)",[(e),(membership_level),(membership_cost),(adminid)])
         con.commit()
@@ -72,7 +84,7 @@ def Registeration():
         msgbox.showinfo("Insert status","Registeration Successful")
         
         Regi.destroy()
-        call([python_alias,"client_home.py",email,membership_level])
+        call([python_alias,"admin_login.py",email,membership_level])
         return True
         
    
