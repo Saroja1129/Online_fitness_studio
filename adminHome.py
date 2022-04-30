@@ -3,23 +3,34 @@ import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
+import argparse
 
-def client_list():
-    
+# pass current user information
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", help="Current user ")
+parser.add_argument("--pw", help="Local password for DB engine")
+args = parser.parse_args()
+user = args.input
+local_DB_password = args.pw
+
+   
+def create_fitness_seminar():
+    call(["python","fitness_seminar.py"])    
+
+def Fetch_Training_session():
     Admin2 = tk.Tk()
     Admin2.title("Admin")
     Admin2.geometry("1300x900") 
-    my_connect = mysql.connect(host="localhost", user="root", passwd="Arti@123", database="fitnessstudio" )
+    my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
-    query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-        client_email, client_mobile,mem_level from client join membership on client_id=mem_client_id"
+    query = "select * from training_session"
 
     connection.execute(query)
 
     myresult = connection.fetchall()
         
     # Create title within page
-    Label_Client = tk.Label(Admin2, text ="Client List" )
+    Label_Client = tk.Label(Admin2, text ="Seminar List" )
     Label_Client.config(font=("Courier", 15))
     Label_Client.place(x = 10, y = 20)
 
@@ -49,31 +60,52 @@ def client_list():
 
     Admin2.mainloop()
 
+
+def create_training_session():
+    call(["python","Adding_training_session.py"]) 
     
-def create_fitness_seminar():
-    call(["python","fitness_seminar.py"])    
+def client_list():
+    call(["python","Admin_client_list.py"])     
     
-def training_session():
-    call(["python","Adding_training_session.py"])    
+
+
+
+
 
 Admin_home=tk.Tk()
 Admin_home.title("Admin_Home_Page")
 Admin_home.geometry("800x600")
 
+my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
+connection = my_connect.cursor()
+query = "select Admin_name from Admin where Admin_Email = " +  "'" + str(user) + "'"
+connection.execute(query)
+results=connection.fetchall()
+a=results[0][0]
 
+Label_IH = tk.Label(Admin_home, text ="Current Admin User-----")
+Label_IH.config(font=("Courier", 12))
+Label_IH.place(x = 10, y = 20)
 
-submitbtn = tk.Button(Admin_home, text ="client_list",
-                      bg ='yellow', command=client_list)
-submitbtn.place(x = 150, y = 140, width = 100)
+Label_IH1 = tk.Label(Admin_home, text =a )
+Label_IH1.config(font=("Courier", 12))
+Label_IH1.place(x = 150, y = 20)
+
+submitbtn = tk.Button(Admin_home, text ="Current Clients",
+                      bg ='gray', command=client_list)
+submitbtn.place(x = 150, y = 140, width = 300)
 
 submitbtn = tk.Button(Admin_home, text ="schedule fitness seminar",
-                      bg ='yellow', command=create_fitness_seminar)
-submitbtn.place(x = 150, y = 180, width = 150)
+                      bg ='gray', command=create_fitness_seminar)
+submitbtn.place(x = 150, y = 240, width = 300)
 
-submitbtn = tk.Button(Admin_home, text ="schedule Training session",
-                      bg ='yellow', command=training_session)
-submitbtn.place(x = 150, y = 220, width = 150)
+submitbtn = tk.Button(Admin_home, text ="Current Scheduled Training sessions",
+                      bg ='gray', command=Fetch_Training_session)
+submitbtn.place(x = 150, y = 340, width = 300)
 
+submitbtn = tk.Button(Admin_home, text ="Create training session",
+                      bg ='gray', command=create_training_session)
+submitbtn.place(x = 150, y = 440, width = 300)
 
 
 Admin_home.mainloop()
