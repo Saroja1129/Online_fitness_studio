@@ -63,7 +63,7 @@ def training_sessions1():
     Client.destroy()
     #call(["python","Premium.py"])
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
-    call([python_alias,"training_session.py  ","--input", user, "--pw"])
+    call([python_alias,"test.py ","--input", user, "--pw"])
     print("training")
 
 def fitness_seminars(kind):
@@ -212,7 +212,7 @@ elif(Type=="Basic"):
     Output_free.place(x = 30, y = 60)
     
     #access to recorded training sessions page
-    #kind='recorded'
+    kind='recorded'
     num1 = tk.Label(Client, text ="1.", font=('bold',20) )
     num1.place(x = 30, y = 90)
     #submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
@@ -231,7 +231,7 @@ elif(Type=="Basic"):
     num3 = tk.Label(Client, text ="3.", font=('bold',20) )
     num3.place(x = 30, y = 150)
     #submitbtn3 = tk.Button(Client, text ="Enroll to "+kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='live'))
-    submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=training_sessions1)
+    submitbtn3 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=training_sessions1)
     submitbtn3.place(x = 50, y = 150, width = 200)
     
     #access to recorded fitness seminars page
@@ -276,7 +276,7 @@ elif(Type=="Premium"):
     num3 = tk.Label(Client, text ="3.", font=('bold',20) )
     num3.place(x = 30, y = 150)
     #submitbtn3 = tk.Button(Client, text ="Enroll to "+kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='live'))
-    submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=training_sessions1)
+    submitbtn3 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=training_sessions1)
     submitbtn3.place(x = 50, y = 150, width = 200)
     
     #access to recorded fitness seminars page
