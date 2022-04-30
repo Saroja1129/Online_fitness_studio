@@ -117,7 +117,6 @@ email varchar(30),
 password varchar(65), -- password needs to be hashed/encrypted
 salary numeric(8,2), -- precision 8, scale 2 can represent 123456.78
 jobType varchar(12),
-rating int default 0,
 primary key (ID),
 unique(email)
 );
@@ -125,6 +124,7 @@ unique(email)
 create table advises(
 clientID varchar(6),
 advID varchar(6),
+Rating int default 0,
 primary key(clientID, advID),
 foreign key(clientID) references client(client_id)
 on delete cascade
@@ -262,19 +262,19 @@ INSERT into membership VALUES
 ('123461','Premium',350,'A23895');
 
 
-insert into advisor values ('Maria',  '468799', 'maria.pepe@gmail.com','de5a12f26a2d68db3742d326ad7ecece27dd6b2ffaf04cb2f875d009d2025e92', 40000, 'Dietitian',0); -- dietitian, mpepe
-insert into advisor values ('Marco',  '555122', 'marco.polo@gmail.com','f14167a245d2053912b589ffd712e3156197402124d14327eb71c25b24171abf', 30000, 'Dietitian',0); -- dietitian, mpolo
-insert into advisor values ('Marike', '832594', 'marike.summer@hotmail.com','dd82c65136623e100348394d2b22f8edb051e97e34d19a52a3e4372304a318b7', 25000, 'Mental_Coach',0); -- mental coach, msummer
-insert into advisor values ('Martin', '236772', 'martin.spring@yahoo.com','fa2bf2712a1bc67b4b2ef4349f8f4d4dca4c833291664fcd047be46bc51b0792', 15000, 'Mental_Coach',0); -- mental coach, mspring
-insert into advisor values ('Bernado', '670046', 'bernado@garces.com','84b5350abc5f0183d0c5b8c914f5d657e0b0f7398063f5a5848103f0a5432aab', 15500, 'Doctor',0); -- doctor, bgarces
-insert into advisor values ('Carl',  '778543', 'carl.winter@gmail.com','e7c93507f8f434b470e24f43bc592f5e1034013a11f39f76d8606d7124c44ab2', 30500, 'Doctor',0); -- doctor, cwinter
+insert into advisor values ('Maria',  '468799', 'maria.pepe@gmail.com','de5a12f26a2d68db3742d326ad7ecece27dd6b2ffaf04cb2f875d009d2025e92', 40000, 'Dietitian'); -- dietitian, mpepe
+insert into advisor values ('Marco',  '555122', 'marco.polo@gmail.com','f14167a245d2053912b589ffd712e3156197402124d14327eb71c25b24171abf', 30000, 'Dietitian'); -- dietitian, mpolo
+insert into advisor values ('Marike', '832594', 'marike.summer@hotmail.com','dd82c65136623e100348394d2b22f8edb051e97e34d19a52a3e4372304a318b7', 25000, 'Mental_Coach'); -- mental coach, msummer
+insert into advisor values ('Martin', '236772', 'martin.spring@yahoo.com','fa2bf2712a1bc67b4b2ef4349f8f4d4dca4c833291664fcd047be46bc51b0792', 15000, 'Mental_Coach'); -- mental coach, mspring
+insert into advisor values ('Bernado', '670046', 'bernado@garces.com','84b5350abc5f0183d0c5b8c914f5d657e0b0f7398063f5a5848103f0a5432aab', 15500, 'Doctor'); -- doctor, bgarces
+insert into advisor values ('Carl',  '778543', 'carl.winter@gmail.com','e7c93507f8f434b470e24f43bc592f5e1034013a11f39f76d8606d7124c44ab2', 30500, 'Doctor'); -- doctor, cwinter
 
-insert into advises values ('123457', '468799'); -- dietitian
-insert into advises values ('123457', '670046'); -- doctor
-insert into advises values ('123457', '832594'); -- mental_coach
-insert into advises values ('123461', '468799'); -- dietitian
-insert into advises values ('123461', '778543'); -- doctor
-insert into advises values ('123461', '832594'); -- mental_coach
+insert into advises values ('123457', '468799',0); -- dietitian
+insert into advises values ('123457', '670046',0); -- doctor
+insert into advises values ('123457', '832594',0); -- mental_coach
+insert into advises values ('123461', '468799'0); -- dietitian
+insert into advises values ('123461', '778543'0); -- doctor
+insert into advises values ('123461', '832594'0); -- mental_coach
 
 
 
