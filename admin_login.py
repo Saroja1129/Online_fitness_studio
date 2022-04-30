@@ -9,14 +9,15 @@ from hashlib import pbkdf2_hmac # for hash function
 from PIL import *
 
 #Change here for your local DB password
-local_DB_Password = "Arti@123"
+local_DB_Password = "um41Tact$"
 python_alias = "python"
 
 
 def Register():
             Admin.destroy()
             #call client Registration page instead of admin
-            call(["python","Regsiter.py"])
+            #call(["python","Register.py"])
+            call([python_alias,"Register.py","--pw", local_DB_Password ])
             return True
 
 # Hash incoming passwords 
@@ -150,5 +151,4 @@ submitbtn1 = tk.Button(Admin, text ="Register Here",
 submitbtn1.place(x = 400, y = 500, width = 100)
 
 Admin.mainloop()
-
 
