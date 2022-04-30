@@ -3,6 +3,16 @@ import tkinter as tk
 import mysql.connector as mysql
 from tkinter import *
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", help="Current user ")
+parser.add_argument("--pw", help="Local password for DB engine")
+args = parser.parse_args()
+user = args.input
+python_alias="python"
+local_DB_password = args.pw
+#local_DB_password = "password"
+
+
 def print_answers():
     value = value_inside.get()
     #print("        ", value)
@@ -28,7 +38,7 @@ root = tk.Tk()
 root.title("Welcome to Training Session Page")
 root.geometry('700x500')
 
-con=mysql.connect(host="localhost",user="root",password="password",db="fitnessstudio")
+con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
 cursor=con.cursor()
 cursor.execute("select instructor.name, session_type, session_individual_group, session_zoom_link, training_session.session_id, session_instructor_id, client_id \
 from training_session join training_session_client join instructor \
