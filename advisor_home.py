@@ -46,10 +46,7 @@ showClients = tk.Button(Advisor_home, text ="Show My Clients",
 showClients.place(x = 150, y = 140, width = 200)
 
 
-# Create Button Add New Client
-#showClients = tk.Button(Advisor_home, text ="Add New Client",
- #                     bg ='blue', command=addNewClient)
-#showClients.place(x = 400, y = 140, width = 200)
+
 
 # Run main loop
 Advisor_home.mainloop()
