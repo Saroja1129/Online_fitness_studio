@@ -5,6 +5,7 @@ from tkinter import *
 from subprocess import call
 import argparse
 
+
 # pass current user information
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
@@ -12,12 +13,15 @@ parser.add_argument("--pw", help="Local password for DB engine")
 parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
-local_DB_Password = args.pw
-python_alias = args.alias
+local_DB_password = args.pw
+python_alias= args.alias
+
+# local_DB_password="Arti@123"
+
 
 
 def Sem_id_generator():
-     con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
+     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
      cursor=con.cursor() 
      cursor.execute("select fs_sem_id from fitness_seminar")
      results = cursor.fetchall()
@@ -29,27 +33,27 @@ def Sem_id_generator():
      Label3 = tk.Label(FS, text =fs_sem_id)
      Label3.place(x = 500, y = 100)
      
-def getname(selected1):
-      con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
-      cursor=con.cursor()
-      print(selected1)
-      cursor.execute("select name from instructor where id =" +  "'" + str(selected1) + "'"  )
-      # cursor.execute("select name from instructor where id ='A00001'"  )
+# def getname(selected1):
+#       con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
+#       cursor=con.cursor()
+#       print(selected1)
+#       cursor.execute("select name from instructor where id =" +  "'" + str(selected1) + "'"  )
+#       # cursor.execute("select name from instructor where id ='A00001'"  )
       
-      results=cursor.fetchall() 
-      print(results)   
-      myFeedback = str(results)        
-      l=len(results)
-      S = str(results[l-1]) 
-      e = int(S[2:8])
-      feedbackEntry = tk.Entry(FS, width = 60) # entry is a text box
-      feedbackEntry.insert(END,e)
-      feedbackEntry.place(x = 800, y = 400, width = 100)
+#       results=cursor.fetchall() 
+#       print(results)   
+#       myFeedback = str(results)        
+#       l=len(results)
+#       S = str(results[l-1]) 
+#       e = int(S[2:8])
+#       feedbackEntry = tk.Entry(FS, width = 60) # entry is a text box
+#       feedbackEntry.insert(END,e)
+#       feedbackEntry.place(x = 800, y = 400, width = 100)
          
 def getadmin():
     
     # Update user and password 
-    con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -70,7 +74,7 @@ def getadmin():
 def getinstructor():
 
     # Update user and password 
-    con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -85,8 +89,8 @@ def getinstructor():
       dropdown = OptionMenu(FS, selected1 ,*options )
       dropdown.place(x = 400, y = 400, width = 200) 
       
-      submitbtn = tk.Button(FS, text ="Inst_name", bg ='white',command=lambda:getname(selected1))
-      submitbtn.place(x = 650, y = 400, width = 100)
+      # submitbtn = tk.Button(FS, text ="Inst_name", bg ='white',command=lambda:getname(selected1))
+      # submitbtn.place(x = 650, y = 400, width = 100)
       
       
       
@@ -96,7 +100,7 @@ def getinstructor():
             
 def submit_details():
     a=fs_zoomlink.get()
-    con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor() 
     cursor.execute("select fs_sem_id from fitness_seminar order by fs_sem_id")
     results = cursor.fetchall()
@@ -117,7 +121,7 @@ def submit_details():
     print(e)
     
     try:
-      con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
+      con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
       cursor=con.cursor()
       print("insert into fitness_seminar values(%s,%s,%s,%s,%s)",[a,b,c,d,e])
       #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
@@ -179,7 +183,7 @@ submitbtn.place(x = 400, y = 350, width = 200)
 # EntryFSInst = tk.Entry(FS, width = 35)
 # EntryFSInst.place(x = 400, y = 550, width = 200)
 
-# con=mysql.connect(host="localhost",user="root",password = local_DB_Password,db="fitnessstudio") 
+# con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
 # cursor=con.cursor()
 # cursor.execute("select name from instructor where id='A00001'"  )
 # cursor.execute("select name from instructor where id ="+ "'"+str(selected1)+"'" +""  )
@@ -210,4 +214,5 @@ submitbtn = tk.Button(FS, text ="CREATE_SEMINAR", bg ='blue',command =submit_det
 submitbtn.place(x = 400, y = 600, width = 150)
 
 FS.mainloop()
+
 
