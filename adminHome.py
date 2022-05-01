@@ -15,8 +15,7 @@ user = args.input
 local_DB_password = args.pw
 python_alias= args.alias
    
-def create_fitness_seminar():
-    call([python_alias,"fitness_seminar.py", user, "--pw", local_DB_password, "--alias", python_alias])    
+
 
 def Fetch_Training_session():
     Admin2 = tk.Tk()
@@ -70,7 +69,11 @@ def client_list():
     
   
 def membership():
-    call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ])
+    call([python_alias,"mem_cost.py","--input", user, "--pw", local_DB_password, "--alias", python_alias])
+    
+def create_fitness_seminar():
+    call([python_alias,"fitness_seminar.py","--input", user, "--pw", local_DB_password,"--alias", python_alias])    
+    
 
     
 
