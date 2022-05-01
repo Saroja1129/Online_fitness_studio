@@ -44,6 +44,9 @@ CREATE TABLE Fitness_seminar
   FS_type     varchar(8), 
   FS_admin_id varchar(25),
   FS_Inst_ID  varchar(6),
+  FS_Name     varchar(24) not null,
+  FS_Date     date,
+  FS_time     time,
   primary key (FS_sem_id),
   unique ( FS_zoomlink),
   -- adding foreign key for schedules
@@ -61,6 +64,7 @@ CREATE TABLE Instructor (
     groupflag boolean,
     semflag boolean,
     Trainer_id varchar(6),
+    Rating int default 0,
     primary key (ID),
     foreign key (Trainer_id) references Instructor(ID) on delete set null
     -- FK instructor to instructor recursive relationship
@@ -122,6 +126,7 @@ unique(email)
 create table advises(
 clientID varchar(6),
 advID varchar(6),
+rating int default 0,
 primary key(clientID, advID),
 foreign key(clientID) references client(client_id)
 on delete cascade
@@ -230,24 +235,24 @@ INSERT into admin VALUES
 ('Jasmine_Wang','jasmine.wang@gmail.com','A23775',100000,'278c52d0ec5b6f6be8e010f1e0a7635468e9189aea96b8c28b9279369b108f8b','123460'); -- jasmine
 
 INSERT into Fitness_seminar VALUES
-('https://us02web.zoom.us/j/87562909621?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2356','live','A23675','A00001'),
-('https://us02web.zoom.us/j/87562909641?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2378','recorded', 'A23795','A00002'),
-('https://us02web.zoom.us/j/87562909631?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2498','live', 'A23675','A00001'),
-('https://us02web.zoom.us/j/87562909651?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS3765','recorded', 'A23675','A00002');
+('https://us02web.zoom.us/j/87562909621?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2356','live','A23675','A00001','Yoga Seminar','2022-02-20','23:45:00'),
+('https://us02web.zoom.us/j/87562909641?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2378','recorded', 'A23795','A00002','Mental Health Seminar','2022-02-20','23:45:00'),
+('https://us02web.zoom.us/j/87562909631?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2498','live', 'A23675','A00001','Diet Plan Seminar','2022-02-20','23:45:00'),
+('https://us02web.zoom.us/j/87562909651?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS3765','recorded', 'A23675','A00002','Fitness Seminar','2022-02-20','23:45:00');
 
 INSERT into Instructor VALUES 
-('A00001','John Smith','28000','jsmith@555.net', 'e99b5787e29d2f8fbca7b4d4a9da8a4f7a50efe4133b9acc1b93ff887c9dc0ab', TRUE, TRUE, FALSE, NULL), -- jsmith 
-('A00002','Iris Flower','23000','Isflwr@555.net', 'c6563d32eaeff464024a71f6d4db12f69158440af07bb25d1628d8c6705551d7', TRUE, FALSE, TRUE, 'A00001'), -- iflower
-('A00003','Ida Gomez','24000','Igomez@555.net', '8bec29ffeadd1aa59ea62be222387418999eddeb5ebe5b1a3d23a60fdf496f28',TRUE,FALSE,FALSE,NULL), -- igomez
-('A00004','Tim Banner','18000','Tbanner@555.net', '901edfbcc092d4b6f5114f94f7a69ebca45e4001c6f628f9ecfa5a6add78e5f8', TRUE, FALSE, FALSE, 'A00002'), -- tbanner
-('A00005','Hyla Ranz','16000','Hranz@555.net', 'cbcdc1d30db076ecd7d9df91becabe1bceb682f372fd36b509dd1314cb90b3b8', FALSE, FALSE, TRUE, 'A00001'), -- hranz
-('A00006','Remy Madden','17000','Rmadden@555.net', 'd71b0b9ea8439850dad553b22547f050da6ebfb74ff20430c702dc04610c2e20', TRUE,FALSE,TRUE,'A00002'), -- rmadden
-('A00010','kyra Forster','28000','kyra.forester@gmail.com', 'f4eff4179495829be8793c1dd4e53f336b8a1337fedc619d27f93e0c0890341c', TRUE, TRUE, FALSE, NULL), -- kforster
-('A00020','vikas tadepu','23000','vikas.tadepu@gmail.com', '1f726457d5f156325ad80247cbd7e7bfdf5a3e26b2ced235d0d33e4fc217849c', TRUE, FALSE, TRUE, 'A00001'), -- vtadeupu
-('A00030','Alex Zalzinayak','24000','Alex.Zalzinayak@gmail.com', '09953161148a9b09bc860b774a1a5b101f76b76274a94573717c6b14daaa7867', TRUE,FALSE,FALSE,NULL), -- azaliznyak
-('A00040','saroja kandula','18000','saroja.kandula@gmail.com', 'a312e6736a53c42cfe92feea3701894b66d422c712e7004e84aead3394518a75',TRUE, FALSE, FALSE, 'A00002'), -- skandula
-('A00050','vineeth kiragi','16000','vineeth.kiragi@gmail.com', 'c42280cac1856c9ce7a5a954a213c09e719a63610a9eb6c1d85532f8f73603a5', FALSE, FALSE, TRUE, 'A00001'), -- vkiradi
-('A00060','Jasmine Wang','17000','Jasmine.Wang@gmail.com', 'cdfb4570b67ee7b9d100972c40cfe926ffaf058023040155fb41e3afadfc37b2', TRUE,FALSE,TRUE,'A00002'); -- jwang
+('A00001','John Smith','28000','jsmith@555.net', 'e99b5787e29d2f8fbca7b4d4a9da8a4f7a50efe4133b9acc1b93ff887c9dc0ab', TRUE, TRUE, FALSE, NULL,0), -- jsmith 
+('A00002','Iris Flower','23000','Isflwr@555.net', 'c6563d32eaeff464024a71f6d4db12f69158440af07bb25d1628d8c6705551d7', TRUE, FALSE, TRUE, 'A00001',0), -- iflower
+('A00003','Ida Gomez','24000','Igomez@555.net', '8bec29ffeadd1aa59ea62be222387418999eddeb5ebe5b1a3d23a60fdf496f28',TRUE,FALSE,FALSE,NULL,0), -- igomez
+('A00004','Tim Banner','18000','Tbanner@555.net', '901edfbcc092d4b6f5114f94f7a69ebca45e4001c6f628f9ecfa5a6add78e5f8', TRUE, FALSE, FALSE, 'A00002',0), -- tbanner
+('A00005','Hyla Ranz','16000','Hranz@555.net', 'cbcdc1d30db076ecd7d9df91becabe1bceb682f372fd36b509dd1314cb90b3b8', FALSE, FALSE, TRUE, 'A00001',0), -- hranz
+('A00006','Remy Madden','17000','Rmadden@555.net', 'd71b0b9ea8439850dad553b22547f050da6ebfb74ff20430c702dc04610c2e20', TRUE,FALSE,TRUE,'A00002',0), -- rmadden
+('A00010','kyra Forster','28000','kyra.forester@gmail.com', 'f4eff4179495829be8793c1dd4e53f336b8a1337fedc619d27f93e0c0890341c', TRUE, TRUE, FALSE, NULL,0), -- kforster
+('A00020','vikas tadepu','23000','vikas.tadepu@gmail.com', '1f726457d5f156325ad80247cbd7e7bfdf5a3e26b2ced235d0d33e4fc217849c', TRUE, FALSE, TRUE, 'A00001',0), -- vtadeupu
+('A00030','Alex Zalzinayak','24000','Alex.Zalzinayak@gmail.com', '09953161148a9b09bc860b774a1a5b101f76b76274a94573717c6b14daaa7867', TRUE,FALSE,FALSE,NULL,0), -- azaliznyak
+('A00040','saroja kandula','18000','saroja.kandula@gmail.com', 'a312e6736a53c42cfe92feea3701894b66d422c712e7004e84aead3394518a75',TRUE, FALSE, FALSE, 'A00002',0), -- skandula
+('A00050','vineeth kiragi','16000','vineeth.kiragi@gmail.com', 'c42280cac1856c9ce7a5a954a213c09e719a63610a9eb6c1d85532f8f73603a5', FALSE, FALSE, TRUE, 'A00001',0), -- vkiradi
+('A00060','Jasmine Wang','17000','Jasmine.Wang@gmail.com', 'cdfb4570b67ee7b9d100972c40cfe926ffaf058023040155fb41e3afadfc37b2', TRUE,FALSE,TRUE,'A00002',0); -- jwang
 
 
 INSERT into membership VALUES
@@ -266,12 +271,12 @@ insert into advisor values ('Martin', '236772', 'martin.spring@yahoo.com','fa2bf
 insert into advisor values ('Bernado', '670046', 'bernado@garces.com','84b5350abc5f0183d0c5b8c914f5d657e0b0f7398063f5a5848103f0a5432aab', 15500, 'Doctor'); -- doctor, bgarces
 insert into advisor values ('Carl',  '778543', 'carl.winter@gmail.com','e7c93507f8f434b470e24f43bc592f5e1034013a11f39f76d8606d7124c44ab2', 30500, 'Doctor'); -- doctor, cwinter
 
-insert into advises values ('123457', '468799'); -- dietitian
-insert into advises values ('123457', '670046'); -- doctor
-insert into advises values ('123457', '832594'); -- mental_coach
-insert into advises values ('123461', '468799'); -- dietitian
-insert into advises values ('123461', '778543'); -- doctor
-insert into advises values ('123461', '832594'); -- mental_coach
+insert into advises values ('123457', '468799',0); -- dietitian
+insert into advises values ('123457', '670046',0); -- doctor
+insert into advises values ('123457', '832594',0); -- mental_coach
+insert into advises values ('123461', '468799',0); -- dietitian
+insert into advises values ('123461', '778543',0); -- doctor
+insert into advises values ('123461', '832594',0); -- mental_coach
 
 
 
@@ -319,7 +324,7 @@ insert into Workouts values ('123461','A00003','1','Whole Body 2');
 
 insert into training_session values ('recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', 'A00010');
 insert into training_session values ('live', 'group', 'http://www.zoom.com/120000', '120000', 'A23655', 'A00020');
-insert into training_session values ('live', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', 'A00030');
+insert into training_session values ('recorded', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', 'A00030');
 insert into training_session values ('recorded', 'group', 'http://www.zoom.com/140000', '140000', 'A23675', 'A00050');
 insert into training_session values ('live', 'group', 'http://www.zoom.com/150000', '150000', 'A23775', 'A00050');
 insert into training_session values ('live', 'individual', 'http://www.zoom.com/160000', '160000', 'A23895', 'A00060');
@@ -335,3 +340,5 @@ insert into training_session_client values ('160000', '123461');
 alter table client add foreign key (client_admin_id) references admin(admin_id) on delete cascade on update cascade;
 alter table Instructor add foreign key (Trainer_id) references Instructor(ID) on delete set NULL;
 alter table Fitness_seminar add foreign key (FS_Inst_ID) references Instructor(ID) on delete cascade on update cascade;
+
+  
