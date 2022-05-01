@@ -6,17 +6,14 @@ from subprocess import call
 from PIL import *
 import argparse
 
-
-#import client_home.py
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
 python_alias="python"
-#local_DB_password = args.pw
-local_DB_password = "password"
+local_DB_password = args.pw
+#local_DB_password = "password"
 
 
 def print_answers():
