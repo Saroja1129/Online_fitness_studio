@@ -9,19 +9,20 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
+parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
-local_DB_Password = args.pw
-
+local_DB_password = args.pw
+python_alias= args.alias
    
 def create_fitness_seminar():
-    call(["python","fitness_seminar.py"])    
+    call([python_alias,"fitness_seminar.py", user, "--pw", local_DB_password, "--alias", python_alias])    
 
 def Fetch_Training_session():
     Admin2 = tk.Tk()
     Admin2.title("Admin")
     Admin2.geometry("1300x900") 
-    my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_Password, database="fitnessstudio" )
+    my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
     query = "select * from training_session"
 
@@ -62,56 +63,30 @@ def Fetch_Training_session():
 
 
 def create_training_session():
-    call(["python","Adding_training_session.py"]) 
+    call([python_alias,"Adding_training_session.py","--input", user, "--pw", local_DB_password, "--alias", python_alias]) 
     
 def client_list():
-    call(["python","Admin_client_list.py"])     
+    call([python_alias,"Admin_client_list.py","--input", user, "--pw", local_DB_password, "--alias", python_alias])   
     
+  
 def membership():
-    def changed():
-        a=Mem_level.get()
-        b=Mem_cost.get()
-        print(a)
-        print(b)
-        m = mysql.connect(host="localhost", user="root", passwd=local_DB_Password, database="fitnessstudio" )
-        connection = m.cursor()
-        query = "update membership set mem_cost=(%s) where mem_level=(%s)",[(a),(b)]
-        connection.execute(query)
-        myresult = connection.fetchall()
-        m.commit()
-    
-    a=tk.Tk()
-    a.geometry("200x300")
-    Label_1 = tk.Label(a, text ="Membership level", )
-    Label_1.place(x=10, y=10)
+    call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ])
 
-    Mem_level = tk.Entry(a, width = 20)
-    Mem_level.place(x=10, y= 50)
     
-    Label_2 = tk.Label(a, text ="Membership cost", )
-    Label_2.place(x=10, y= 100)
-
-    Mem_cost = tk.Entry(a, width = 20)
-    Mem_cost.place(x=10, y= 150)
-    
-    submitbtn1 = tk.Button(a, text ="Modify",bg ='silver', command=changed)
-    submitbtn1.place(x=10,y=200).pack()
-    a.mainloop()
-    
-
-
 
 
 Admin_home=tk.Tk()
 Admin_home.title("Admin_Home_Page")
 Admin_home.geometry("800x600")
 
-my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_Password, database="fitnessstudio" )
+my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
 connection = my_connect.cursor()
-query = "select Admin_name from Admin where Admin_Email = " +  "'" + str(user) + "'"
+query = "select admin_name from admin where admin_Email = " +  "'" + str(user) + "'"
 connection.execute(query)
 results=connection.fetchall()
 a=results[0][0]
+
+
 
 Label_IH = tk.Label(Admin_home, text ="Current Admin User-----")
 Label_IH.config(font=("Courier", 12))
@@ -143,6 +118,3 @@ submitbtn.place(x = 150, y = 540, width = 300)
 
 
 Admin_home.mainloop()
-
-
-

@@ -9,11 +9,12 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
+parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
-python_alias="python"
+python_alias= args.alias
 local_DB_password = args.pw
-#local_DB_password = "password"
+
 
 
 def print_answers():
@@ -65,10 +66,10 @@ root.geometry('700x500')
 
 con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
 cursor=con.cursor()
-cursor.execute("select instructor.name, session_type, session_individual_group, session_zoom_link, training_session.session_id, session_instructor_id, client_id \
-from training_session join training_session_client join instructor \
+cursor.execute("select Instructor.name, session_type, session_individual_group, session_zoom_link, training_session.session_id, session_instructor_id, client_id \
+from training_session join training_session_client join Instructor \
 where training_session.session_id = training_session_client.session_id \
-and training_session.session_instructor_id = instructor.ID")
+and training_session.session_instructor_id = Instructor.ID")
 
 results=cursor.fetchall()
 

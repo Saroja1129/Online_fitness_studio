@@ -9,14 +9,14 @@ from hashlib import pbkdf2_hmac # for hash function
 from PIL import *
 
 #Change here for your local DB password
-local_DB_password = "Arti@123"
-python_alias = "python"
+local_DB_password = "password"
+python_alias = "python3"
 
 
 def Register():
             Admin.destroy()
             #call client Registration page instead of admin
-            call(["python","Register.py"])
+            call([python_alias,"Register.py"])
             return True
 
 # Hash incoming passwords 
@@ -50,7 +50,7 @@ def submitact():
         if results:
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
-            call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_password ])
+            call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_password , "--alias", python_alias ])
             return True
         else:
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -66,7 +66,7 @@ def submitact():
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
             #call client home_page instead of admin
-            call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
+            call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ])
             return True
         else:
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -82,7 +82,7 @@ def submitact():
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
             #call client home_page instead of admin
-            call([python_alias,"advisor_home.py","--input", user, "--pw", local_DB_password ])
+            call([python_alias,"advisor_home.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ])
             return True
         else:
             msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -98,7 +98,7 @@ def submitact():
              msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
              Admin.destroy()
              
-             call([python_alias,"Instructor.py","--input", user, "--pw", local_DB_password ]) # TODO call client home_page instead of admin
+             call([python_alias,"Instructor.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ]) # TODO call client home_page instead of admin
              return True
          else:
              msgbox.showinfo("Login status","lOGIN UNSUCCESSFULL")
@@ -135,7 +135,7 @@ Label_Password.place(x = 200, y = 350)
 
 Password= tk.Entry(Admin, width = 35)
 Password.place(x = 300, y = 350, width = 200)
-# Password.config(show="*")
+Password.config(show="*")
 
 
 submitbtn = tk.Button(Admin, text ="Login",

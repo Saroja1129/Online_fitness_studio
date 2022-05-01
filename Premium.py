@@ -15,7 +15,7 @@ parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
 #user="name3.last@gmail.com"
-python_alias="python"
+python_alias="python3"
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
 
