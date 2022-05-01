@@ -143,7 +143,8 @@ def Advisor_Request():
 def premium():
     Client.destroy()
     #call the buy premium page
-    call([python_alias,"Premium.py"])
+    call([python_alias,"Premium.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
+    #call([python_alias,"Premium.py"])
     return True
 
 
