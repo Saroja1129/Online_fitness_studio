@@ -16,7 +16,7 @@ python_alias = "python3"
 def Register():
             Admin.destroy()
             #call client Registration page instead of admin
-            call([python_alias,"Register.py", "--alias", python_alias])
+            call([python_alias,"Register.py", "--alias", python_alias, "--pw", local_DB_password ])
             return True
 
 # Hash incoming passwords 
