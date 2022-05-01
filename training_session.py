@@ -45,25 +45,22 @@ def print_answers():
     elif(b=='P'):
         Type="Premium"
 
-    if Type == "Free":
-        tkmb.showinfo("This is the zoom link to access the session: \n", str(result[3]))
-    if Type == "Basic":
+    if ("recorded" in value) and (Type == "Free" or Type == "Basic" or Type == "Premium"):
+        for result in result_list:
+            result_str = str(result[0:3])
+            if value in result_str:
+                tkmb.showinfo("This is the zoom link to access the session: \n", str(result[3]))
+    elif ("live" in value) and (Type == "Basic" or Type == "Premium"):
+        for result in result_list:
+            result_str = str(result[0:3])
+            if value in result_str:
+                tkmb.showinfo("This is the zoom link to access the session: \n", str(result[3]))
+    else: 
         tkmb.showinfo("title", "Please upgrade your membership first!")
+        #wait(10)
         root.destroy()
+        #call([python_alias,"premium.py","--input", user, "--pw",local_DB_password])
         call([python_alias,"admin_login.py","--input", user, "--pw",local_DB_password])
-
-    
-    #if "live" in value:
-    #    if "individual" in value:
-    #        tkmb.showinfo("title", "Please upgrade your membership first!")
-    #else:
-    #    for result in result_list:
-    #        #print("====", value, type(value))
-    #        #print("----", result[0:3], type(result[0:3]))
-    #        result_str = str(result[0:3])
-    #        #print("++++++", result_str)
-    #        if value in result_str:
-    #            tkmb.showinfo("This is the zoom link to access the session: \n", str(result[3]))
 
 root = tk.Tk()
 root.title("Client -- Training Session")
