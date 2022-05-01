@@ -12,13 +12,14 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
+parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
 #user="name3.last@gmail.com"
-#python_alias="python"
 python_alias=args.alias
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
+
 
 def BuyBasic():
     #print("We are in Buy Basic")
