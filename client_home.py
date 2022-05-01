@@ -7,12 +7,15 @@ from subprocess import call
 from PIL import *
 import argparse
 
-# pass current user information
+#pass current user informations
+ 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
 user = args.input
+#user="name1.last@gmail.com"
+python_alias="python"
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
 
@@ -24,8 +27,8 @@ def train_sessions(kind):
     Rec_tra_sessions .geometry("1300x900") 
     my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
-    query = "select session_instructor_name,session_invididual_group,session_id,\
-    session_zoom_link from training_session where session_type=" + "'" + str(kind) +"'" 
+    query = ("select session_instructor_name,session_invididual_group,session_id,\
+    session_zoom_link from training_session where session_type=" + "'" + str(kind) +"'" )
                                                                
     connection.execute(query)
 
@@ -56,6 +59,13 @@ def train_sessions(kind):
             
         i=i+1
     Rec_tra_sessions.mainloop()
+    
+def training_sessions1():
+    Client.destroy()
+    #call(["python","Premium.py"])
+    #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
+    call([python_alias,"training_session.py","--input", user, "--pw",local_DB_password])
+    print("training")
 
 def fitness_seminars(kind):
     Rec_fitness_seminars = tk.Tk()
@@ -97,14 +107,37 @@ def fitness_seminars(kind):
     Rec_fitness_seminars.mainloop()
     
 def Advisor_Request():
+    #comment the next statement when uploading
+    #user="name1.last@gmail.com"
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
+    cursor=con.cursor()
+    cursor.execute("select client_id from client where client_email = %s", [(user)] )
+    results=cursor.fetchall()
+    #print(results)
+    l=len(results)
+    S = str(results[l-1]) 
+    e = int(S[2:8]) 
+    #print(e)
+    a=Adv_type.get()
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
+    cursor=con.cursor()
+    cursor.execute("select max(id) from advisor where jobType = %s", [(a)] )
+    results1=cursor.fetchall()
+    #print(results1)
+    l=len(results1)
+    S = str(results1[l-1]) 
+    f = int(S[2:8]) 
+    #print(f)
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
     cursor=con.cursor()
-    cursor.execute("insert into client (client_admin_id,client_id,client_bmi,client_email,client_pwd,client_name,client_mobile,client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                   [(adminid),(e),(bmi),(email),(password),(user),(mobile),(weight),(height),(age),(sex)])
+    cursor.execute("insert into advises (clientID,advID) values(%s,%s)",
+                   [(e),(f)])
     con.commit()
     msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
-    Admin.destroy()
-    call([python_alias,"adminHome.py","--input", user, "--pw", local_DB_Password,"--" ])
+    Client.destroy()
+    #call(["python","Premium.py"])
+    #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
+    call([python_alias,"Client_advisor_display.py","--input", user, "--pw", local_DB_password,"--Job",a])
     
 def premium():
     Client.destroy()
@@ -121,20 +154,22 @@ Client.geometry("800x600")
 con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
 cursor=con.cursor()
 cursor.execute("select mem_level from membership join client on\
-               mem_client_id=client_id where client_email =" + "'" + str(user) +"'")
+              mem_client_id=client_id where client_email =" + "'" + str(user) +"'")
 results=cursor.fetchall()
-results=[('Basic',)]
 l=len(results)
-#print(l)
+print(l)
 S = str(results[l-1]) 
 b= S[2]
-#print(results)
+print(b)
+
 if(b=='F'):
     Type="Free"
 elif(b=='B'):
     Type="Basic"
 elif(b=='P'):
     Type="Premium"
+
+#Type="Premium"
 
 if(Type=="Free"):
     
@@ -148,11 +183,12 @@ if(Type=="Free"):
     kind='recorded'
     num1 = tk.Label(Client, text ="1.", font=('bold',20) )
     num1.place(x = 30, y = 90)
-    submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
+    #submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
+    submitbtn1 = tk.Button(Client, text =" Traning sessions",bg ='silver', command=training_sessions1)
     submitbtn1.place(x = 50, y = 90, width = 200)
     
     #access to recorded fitness seminars page
-    #kind='recorded'
+    kind='recorded'
     num2 = tk.Label(Client, text ="2.", font=('bold',20) )
     num2.place(x = 30, y = 120)
     submitbtn2 = tk.Button(Client, text =kind+" Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='recorded'))
@@ -180,27 +216,30 @@ elif(Type=="Basic"):
     kind='recorded'
     num1 = tk.Label(Client, text ="1.", font=('bold',20) )
     num1.place(x = 30, y = 90)
-    submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
+    #submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
+    submitbtn1 = tk.Button(Client, text =" Traning sessions",bg ='silver', command=training_sessions1)
     submitbtn1.place(x = 50, y = 90, width = 200)
     
     #access to recorded fitness seminars page
+    kind='recorded'
     num2 = tk.Label(Client, text ="2.", font=('bold',20) )
     num2.place(x = 30, y = 120)
     submitbtn2 = tk.Button(Client, text =kind+" Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='recorded'))
     submitbtn2.place(x = 50, y = 120, width = 200)
     
     #access to live training sessions page
-    kind='live'
-    num3 = tk.Label(Client, text ="3.", font=('bold',20) )
-    num3.place(x = 30, y = 150)
-    submitbtn3 = tk.Button(Client, text ="Enroll to "+kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='live'))
-    submitbtn3.place(x = 50, y = 150, width = 200)
+    #kind='live'
+    #num3 = tk.Label(Client, text ="3.", font=('bold',20) )
+    #num3.place(x = 30, y = 150)
+    #submitbtn3 = tk.Button(Client, text ="Enroll to "+kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='live'))
+    #submitbtn3 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=training_sessions1)
+    #submitbtn3.place(x = 50, y = 150, width = 200)
     
     #access to recorded fitness seminars page
-    num4 = tk.Label(Client, text ="4.", font=('bold',20) )
-    num4.place(x = 30, y = 180)
+    num4 = tk.Label(Client, text ="3.", font=('bold',20) )
+    num4.place(x = 30, y = 150)
     submitbtn4 = tk.Button(Client, text ="Enroll to "+kind+"  Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='live'))
-    submitbtn4.place(x = 50, y = 180, width = 200)
+    submitbtn4.place(x = 50, y = 150, width = 200)
     
     #more stuff
     Output_more_stuff = tk.Label(Client, text ="If you want to access more exciting features such as:", font=('bold',20) )
@@ -213,7 +252,6 @@ elif(Type=="Basic"):
 
 
 elif(Type=="Premium"):
-    print(user)
     Free_User = tk.Label(Client, text =Type+" USER:", font=('bold',30) )
     Free_User .place(x = 30, y = 20)
     
@@ -224,7 +262,8 @@ elif(Type=="Premium"):
     kind='recorded'
     num1 = tk.Label(Client, text ="1.", font=('bold',20) )
     num1.place(x = 30, y = 90)
-    submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
+    #submitbtn1 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='recorded'))
+    submitbtn1 = tk.Button(Client, text =" Traning sessions",bg ='silver', command=training_sessions1)
     submitbtn1.place(x = 50, y = 90, width = 200)
     
     #access to recorded fitness seminars page
@@ -234,17 +273,18 @@ elif(Type=="Premium"):
     submitbtn2.place(x = 50, y = 120, width = 200)
     
     #access to live training sessions page
-    kind='live'
-    num3 = tk.Label(Client, text ="3.", font=('bold',20) )
-    num3.place(x = 30, y = 150)
-    submitbtn3 = tk.Button(Client, text ="Enroll to "+kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='live'))
-    submitbtn3.place(x = 50, y = 150, width = 200)
+    #kind='live'
+    #num3 = tk.Label(Client, text ="3.", font=('bold',20) )
+    #num3.place(x = 30, y = 150)
+    #submitbtn3 = tk.Button(Client, text ="Enroll to "+kind+" Traning sessions",bg ='silver', command=lambda:train_sessions(kind='live'))
+    #submitbtn3 = tk.Button(Client, text =kind+" Traning sessions",bg ='silver', command=training_sessions1)
+    #submitbtn3.place(x = 50, y = 150, width = 200)
     
     #access to recorded fitness seminars page
-    num4 = tk.Label(Client, text ="4.", font=('bold',20) )
-    num4.place(x = 30, y = 180)
+    num4 = tk.Label(Client, text ="3.", font=('bold',20) )
+    num4.place(x = 30, y = 150)
     submitbtn4 = tk.Button(Client, text ="Enroll to "+kind+"  Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='live'))
-    submitbtn4.place(x = 50, y = 180, width = 200)
+    submitbtn4.place(x = 50, y = 150, width = 200)
     
     Output_more_stuff = tk.Label(Client, text ="As a Premium user you can request for an Advisor:", font=('bold',20) )
     Output_more_stuff.place(x = 30, y = 250)
@@ -257,15 +297,5 @@ elif(Type=="Premium"):
     regibutton1 = tk.Button(Client, text ="Request", font=('bold',30),
                           bg ='silver', command=Advisor_Request)
     regibutton1.place(x = 180, y = 310, width = 150, height = 50)
-    
-    
-
-
-
-
-
-
-
-
 
 Client.mainloop()
