@@ -12,11 +12,10 @@ parser.add_argument("--pw", help="Local password for DB engine")
 parser.add_argument("--Job", help="Job Type of Advisor")
 args = parser.parse_args()
 user = args.input
-# local_DB_password = args.pw
-# jobType=args.Job
+local_DB_password = args.pw
+jobType=args.Job
 
-local_DB_password="Arti@123"
-jobType="Dietian"
+
 
 
 
