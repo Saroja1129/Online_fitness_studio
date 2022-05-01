@@ -138,7 +138,8 @@ def Advisor_Request():
     Client.destroy()
     #call(["python","Premium.py"])
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
-    call([python_alias,"Client_advisor_display.py","--input", user, "--pw", local_DB_password,"--Job",a])
+    call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
+    #call([python_alias,"Client_advisor_display.py","--input", user, "--pw", local_DB_password,"--Job",a])
     
 def premium():
     Client.destroy()
