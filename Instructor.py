@@ -10,12 +10,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
 args = parser.parse_args()
-user = args.input
-local_DB_password = args.pw
+inst_email = args.input
+pwd = args.pw
+usr="root"
 
-usr=user
-pwd=args.pw
-inst_id = str(user)
 
 
 # Get single client information
@@ -438,14 +436,20 @@ def contactTrainee(Trainee):
 
 # Instantiate instructor_home class
 
-queryIn = "select Name from Instructor where ID = '" + str(inst_id)+"'"
-queryTrainer = "select Trainer_id from Instructor where ID = '" + str(inst_id)+"'"
+#inst_email = "Isflwr@555.net"
+queryIn = "select Name,ID from Instructor where Email = '" + str(inst_email)+"'"
+
 
 
 my_connectI = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
 conin = my_connectI.cursor()
 conin.execute(queryIn)
-inst_name = conin.fetchall()[0][0]
+instinfo=conin.fetchall()
+inst_name = instinfo[0][0]
+inst_id = instinfo[0][1]
+
+queryTrainer = "select Trainer_id from Instructor where ID = '" + str(inst_id)+"'"
+
 
 conin.execute(queryTrainer)
 tr_id = conin.fetchall()[0][0]
@@ -489,11 +493,11 @@ if (str(tr_id) != "None"):
     trainerInfo = connectiontrainer.fetchall()
     tr_email= trainerInfo[0][0]
     tr_name = trainerInfo[0][1]
-    Label_IH = tk.Label(Instructor_home, text ="Being trained by " +str(tr_name)+", email: " +str(tr_email) )
+    Label_IH = tk.Label(Instructor_home, text ="Training supervisor: " +str(tr_name)+", email: " +str(tr_email) )
     Label_IH.config(font=("Courier", 12))
     Label_IH.place(x = 10, y = 70)
 if (str(tr_id) == "None"):
-    Label_IH = tk.Label(Instructor_home, text ="Training Supervisor" )
+    Label_IH = tk.Label(Instructor_home, text ="Lead Trainer" )
     Label_IH.config(font=("Courier", 12))
     Label_IH.place(x = 10, y = 70)
 
