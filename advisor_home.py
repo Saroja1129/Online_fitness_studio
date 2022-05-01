@@ -9,11 +9,12 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
+parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
 
-python_alias = "python3"
+python_alias = args.alias
   
 
 
