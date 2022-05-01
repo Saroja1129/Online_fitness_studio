@@ -3,10 +3,20 @@ import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
-usr=
-pwd=
 
-inst_id = 'A00001'
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", help="Current user ")
+parser.add_argument("--pw", help="Local password for DB engine")
+args = parser.parse_args()
+user = args.input
+local_DB_password = args.pw
+
+usr=user
+pwd=args.pw
+inst_id = str(user)
+
 
 # Get single client information
 def singleClientWP(client_id):
@@ -37,7 +47,7 @@ def singleClientWP(client_id):
     i = 0
     for client in clientinfo: 
 
-        for j in range(2,6):
+        for j in range(2,7):
 
             e = Entry(clientWP,width=20, fg='blue')
             e.grid(row=i, column=j) 
@@ -294,7 +304,7 @@ def sessionInfo(session):
     e = Entry(sessZInfo,width=24, fg='blue')
     e.insert(END, "Ind/Group: " + str(sess_Ind))
     e.place(x = 60 , y = 180)
-    contactTrainee.mainloop()
+    sessZInfo.mainloop()
 
 
 
@@ -408,9 +418,9 @@ def contactTrainee(Trainee):
     contact = tk.Tk()
     contact.title("Contact Information")
     contact.geometry("480x360") 
-    Label_Client = tk.Label(contact, text ="Contact Info for "+ str(Tee_name) )
-    Label_Client.config(font=("Courier", 12))
-    Label_Client.place(x = 10, y = 20)
+    labelContactTrainee = tk.Label(contact, text ="Contact Info for "+ str(Tee_name) )
+    labelContactTrainee.config(font=("Courier", 12))
+    labelContactTrainee.place(x = 10, y = 20)
     e = Entry(contact,width=24, fg='blue')
     e.insert(END, "ID #: " + str(Tee_id))
     e.place(x = 60 , y = 60)
@@ -420,17 +430,26 @@ def contactTrainee(Trainee):
   #  e = Entry(contact,width=24, fg='blue')
   #  e.insert(END, "Number: " + str(client_mobile))
   #  e.place(x = 60 , y = 180)
-    contactTrainee.mainloop()
+    contact.mainloop()
+
+
 
 
 
 # Instantiate instructor_home class
 
 queryIn = "select Name from Instructor where ID = '" + str(inst_id)+"'"
+queryTrainer = "select Trainer_id from Instructor where ID = '" + str(inst_id)+"'"
+
+
 my_connectI = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
 conin = my_connectI.cursor()
 conin.execute(queryIn)
 inst_name = conin.fetchall()[0][0]
+
+conin.execute(queryTrainer)
+tr_id = conin.fetchall()[0][0]
+
 
 Instructor_home=tk.Tk()
 Instructor_home.title("Instructor_Home_Page")
@@ -453,14 +472,30 @@ showSessions.place(x = 150, y = 240, width = 200)
 # Create Button Show Seminars
 showSeminars = tk.Button(Instructor_home, text ="Show My Seminars",
                       bg ='gray', command=sem_list)
-showSeminars.place(x = 150, y = 340, width = 200)
+showSeminars.place(x = 150, y = 340, width = 200)       
+
 
 # Create Button Show Seminars
-showSeminars = tk.Button(Instructor_home, text ="Training",
+showSeminars = tk.Button(Instructor_home, text ="Show My Trainees",
                       bg ='gray', command=training)
 showSeminars.place(x = 150, y = 440, width = 200)
 
-
+if (str(tr_id) != "None"):
+    # Create Button Show Trainer
+    queryTrEmail =  "select Email,Name from Instructor where ID = '" + str(tr_id)+"'"
+    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
+    connectiontrainer = my_connect.cursor()
+    connectiontrainer.execute(queryTrEmail)
+    trainerInfo = connectiontrainer.fetchall()
+    tr_email= trainerInfo[0][0]
+    tr_name = trainerInfo[0][1]
+    Label_IH = tk.Label(Instructor_home, text ="Being trained by " +str(tr_name)+", email: " +str(tr_email) )
+    Label_IH.config(font=("Courier", 12))
+    Label_IH.place(x = 10, y = 70)
+if (str(tr_id) == "None"):
+    Label_IH = tk.Label(Instructor_home, text ="Training Supervisor" )
+    Label_IH.config(font=("Courier", 12))
+    Label_IH.place(x = 10, y = 70)
 
 # Run main loop
 Instructor_home.mainloop()
