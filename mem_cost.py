@@ -10,10 +10,11 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
+parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
 local_DB_Password = args.pw
-
+python_alias= args.alias
 
 def changed():
     a=Mem_level.get()
