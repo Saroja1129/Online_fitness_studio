@@ -16,7 +16,8 @@ parser.add_argument("--alias", help= "python alias")
 args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
-
+python_alias= args.alias
+   
 
 
 # def getclient():
@@ -114,10 +115,10 @@ def submitact():
       cursor.execute("insert into training_session values(%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
       con.commit()
       results=cursor.fetchall()
-      msgbox.showinfo("Create status","Fitness_seminar creation succesfull")
+      msgbox.showinfo("Create status","Training_session creation succesfull")
     except:
       print("Error: unable to create")
-      msgbox.showinfo("Create status","Fitness_seminar creation unsuccesfull")
+      msgbox.showinfo("Create status","Training_session creation unsuccesfull")
 
 
 
@@ -175,3 +176,4 @@ submitbtn.place(x = 350, y = 500, width = 150)
 
 
 Tran_ses.mainloop()
+
