@@ -42,7 +42,7 @@ def GetMacronutrients(client):
             
             con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
             cursor=con.cursor()
-            # cursor.execute("select client_feedback from client where client_email = " +  "'" + str(user) + "'"  )
+            cursor.execute("select client_feedback from client where client_email = " +  "'" + str(user) + "'"  )
             # cursor.execute("select client_id from client where client_email ='name1.last@gmail.com'"  )
             # results=cursor.fetchall()
             # client = results[0][0]
