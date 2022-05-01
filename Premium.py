@@ -30,7 +30,8 @@ def BuyBasic():
     con.commit()
     msgbox.showinfo("Login status","YOU HAVE BEEN SUCCESSFULLY UPGRADED TO BASIC")
     Premium.destroy()
-    call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
+    call([python_alias,"client_home.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
+    #call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
     return True
     
 def BuyPremium():
@@ -42,7 +43,8 @@ def BuyPremium():
     con.commit()
     msgbox.showinfo("Login status","YOU HAVE BEEN UPGRADED SUCCESSFULLY TO PREMIUM")
     Premium.destroy()
-    call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
+    call([python_alias,"client_home.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
+    #call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
     return True
 
 Premium=tk.Tk()
