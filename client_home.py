@@ -65,7 +65,7 @@ def training_sessions1():
     Client.destroy()
     #call(["python","Premium.py"])
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
-    call([python_alias,"training_session.py","--input", user, "--pw",local_DB_password])
+    call([python_alias,"training_session.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
     print("training")
 
 def fitness_seminars(kind):

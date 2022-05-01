@@ -12,10 +12,11 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
 parser.add_argument("--pw", help="Local password for DB engine")
+parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
 #user="name3.last@gmail.com"
-python_alias="python3"
+python_alias=args.alias
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
 
@@ -28,7 +29,7 @@ def BuyBasic():
     con.commit()
     msgbox.showinfo("Login status","YOU HAVE BEEN SUCCESSFULLY UPGRADED TO BASIC")
     Premium.destroy()
-    call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
+    call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ])
     return True
     
 def BuyPremium():
@@ -40,7 +41,7 @@ def BuyPremium():
     con.commit()
     msgbox.showinfo("Login status","YOU HAVE BEEN UPGRADED SUCCESSFULLY TO PREMIUM")
     Premium.destroy()
-    call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password ])
+    call([python_alias,"client_home.py","--input", user, "--pw", local_DB_password, "--alias", python_alias ])
     return True
 
 Premium=tk.Tk()
