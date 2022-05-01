@@ -56,8 +56,8 @@ def print_answers():
         tkmb.showinfo("title", "Please upgrade your membership first!")
         #wait(10)
         root.destroy()
-        #call([python_alias,"premium.py","--input", user, "--pw",local_DB_password])
-        call([python_alias,"admin_login.py","--input", user, "--pw",local_DB_password])
+        call([python_alias,"premium.py","--input", user, "--pw",local_DB_password])
+        #call([python_alias,"admin_login.py","--input", user, "--pw",local_DB_password])
 
 root = tk.Tk()
 root.title("Client -- Training Session")
