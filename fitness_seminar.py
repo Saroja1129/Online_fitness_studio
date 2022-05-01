@@ -3,9 +3,19 @@ import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
+import argparse
+
+# pass current user information
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", help="Current user ")
+parser.add_argument("--pw", help="Local password for DB engine")
+args = parser.parse_args()
+user = args.input
+local_DB_Password = args.pw
+
 
 def Sem_id_generator():
-     con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio")
+     con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
      cursor=con.cursor() 
      cursor.execute("select fs_sem_id from fitness_seminar")
      results = cursor.fetchall()
@@ -17,11 +27,27 @@ def Sem_id_generator():
      Label3 = tk.Label(FS, text =fs_sem_id)
      Label3.place(x = 500, y = 100)
      
+def getname(selected1):
+      con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
+      cursor=con.cursor()
+      print(selected1)
+      cursor.execute("select name from instructor where id =" +  "'" + str(selected1) + "'"  )
+      # cursor.execute("select name from instructor where id ='A00001'"  )
+      
+      results=cursor.fetchall() 
+      print(results)   
+      myFeedback = str(results)        
+      l=len(results)
+      S = str(results[l-1]) 
+      e = int(S[2:8])
+      feedbackEntry = tk.Entry(FS, width = 60) # entry is a text box
+      feedbackEntry.insert(END,e)
+      feedbackEntry.place(x = 800, y = 400, width = 100)
          
 def getadmin():
     
     # Update user and password 
-    con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -42,7 +68,7 @@ def getadmin():
 def getinstructor():
 
     # Update user and password 
-    con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
     cursor=con.cursor()
     movieList = []
     try:
@@ -56,13 +82,19 @@ def getinstructor():
       options=movieList 
       dropdown = OptionMenu(FS, selected1 ,*options )
       dropdown.place(x = 400, y = 400, width = 200) 
-        
+      
+      submitbtn = tk.Button(FS, text ="Inst_name", bg ='white',command=lambda:getname(selected1))
+      submitbtn.place(x = 650, y = 400, width = 100)
+      
+      
+      
+            
     except:
        print("Error: unable to fecth data")
             
 def submit_details():
     a=fs_zoomlink.get()
-    con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio")
+    con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
     cursor=con.cursor() 
     cursor.execute("select fs_sem_id from fitness_seminar order by fs_sem_id")
     results = cursor.fetchall()
@@ -73,6 +105,9 @@ def submit_details():
     c=clicked.get()
     d=selected.get()
     e=selected1.get()
+    f=fs_name.get()
+    g=date.get()
+    h=time.get()
     print(a)
     print(b)
     print(c)
@@ -80,11 +115,11 @@ def submit_details():
     print(e)
     
     try:
-      con=mysql.connect(host="localhost",user="root",password="Arti@123",db="fitnessstudio")
+      con=mysql.connect(host="localhost",user="root",password=local_DB_Password,db="fitnessstudio")
       cursor=con.cursor()
       print("insert into fitness_seminar values(%s,%s,%s,%s,%s)",[a,b,c,d,e])
       #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
-      cursor.execute("insert into fitness_seminar values(%s,%s,%s,%s,%s)",[a,b,c,d,e])
+      cursor.execute("insert into fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
       con.commit()
       results=cursor.fetchall()
       msgbox.showinfo("Create status","Fitness_seminar creation succesfull")
@@ -100,6 +135,12 @@ selected = StringVar(FS)
 selected1 = StringVar(FS)
 fs_sem_id =StringVar(FS)
 #fs_sem_id="hi"
+
+Label0 = tk.Label(FS, text ="Fitness seminar Title", )
+Label0.place(x = 250, y = 50)
+
+fs_name = tk.Entry(FS, width = 35)
+fs_name.place(x = 400, y = 50, width = 200)
 
 Label1 = tk.Label(FS, text ="Fitness seminar Zoomlink", )
 Label1.place(x = 250, y = 100)
@@ -133,10 +174,38 @@ adminid.place(x = 400, y = 250, width = 200)
 submitbtn = tk.Button(FS, text ="Fetch available seminar instructors", bg ='white',command=getinstructor)
 submitbtn.place(x = 400, y = 350, width = 200)
 
+# EntryFSInst = tk.Entry(FS, width = 35)
+# EntryFSInst.place(x = 400, y = 550, width = 200)
+
+# con=mysql.connect(host="localhost",user="root",password = local_DB_Password,db="fitnessstudio") 
+# cursor=con.cursor()
+# cursor.execute("select name from instructor where id='A00001'"  )
+# cursor.execute("select name from instructor where id ="+ "'"+str(selected1)+"'" +""  )
+# results=cursor.fetchall()
+    
+# myFeedback = results[0][0]
+    
+# feedbackEntry = tk.Entry(FS, width = 50) # entry is a text box
+# feedbackEntry.insert(END,myFeedback)
+# feedbackEntry.place(x = 400, y = 550, width = 400)
+
 Label5 = tk.Label(FS, text ="Instructor")
 Label5.place(x = 250, y = 350)
 
+Label5 = tk.Label(FS, text ="Fitness seminar date", )
+Label5.place(x = 250, y = 450)
+
+date = tk.Entry(FS, width = 35)
+date.place(x = 400, y = 450, width = 200)
+
+lbl_time = tk.Label(FS, text ="Fitness seminar Time", )
+lbl_time.place(x = 250, y = 500)
+
+time = tk.Entry(FS, width = 35)
+time.place(x = 400, y = 500, width = 200)
+
 submitbtn = tk.Button(FS, text ="CREATE_SEMINAR", bg ='blue',command =submit_details)
-submitbtn.place(x = 400, y = 450, width = 150)
+submitbtn.place(x = 400, y = 600, width = 150)
 
 FS.mainloop()
+
