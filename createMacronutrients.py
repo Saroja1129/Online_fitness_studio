@@ -1,6 +1,17 @@
 import tkinter as tk
 import tkinter.messagebox as msgbox
 from tkinter import *
+import logging
+
+# Create log file
+log_file = 'dietitianLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
 
 # The script needs to be read from the bottom to the top. The main dietitian home page is initiated after all functions needed are defined.
 # 1.) Get single client by pushing button GetClient
@@ -28,8 +39,17 @@ def insert_or_update(connection, dietitian, result, client_id, proteinEntry, car
     if result ==[]:
 
         # if plan supplements is not existent, but already a diet plan ID was created for specific client, fetch client id, otherwise create new plan ID
-        query = "select diet_plan_ID from dietary_plan where clientID = " + "'"+str(client_id)+"'" +""
-        connection.execute(query)
+        
+        try:              
+            query = "select diet_plan_ID from dietary_plan where clientID = " + "'"+str(client_id)+"'" +""
+            logging.info(query) # save operation in log file
+            connection.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.connector.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+        
 
         planID = connection.fetchall()
 
@@ -37,8 +57,17 @@ def insert_or_update(connection, dietitian, result, client_id, proteinEntry, car
             newPlanID = planID[0][0]
         else:
             # Get current maximum plan value
-            query = "select max(diet_plan_ID) from dietary_plan"
-            connection.execute(query)
+            try:              
+                query = "select max(diet_plan_ID) from dietary_plan"
+                logging.info(query) # save operation in log file
+                connection.execute(query)
+                logging.info("Query was successful!")
+
+            except mysql.connector.Error as err:
+                logging.error(err)
+                logging.error("Query not successful!")
+
+        
             maxPlanID = connection.fetchall()
             maxPlanID = maxPlanID[0][0]
 
@@ -46,18 +75,44 @@ def insert_or_update(connection, dietitian, result, client_id, proteinEntry, car
             newPlanID = int(maxPlanID) +1
 
             # Create a new dietary plan for particluar client
-            query0 = "insert into dietary_plan values ("+ "'"+str(newPlanID)+"'" +"," "'"+str(userID)+"'," + "'"+str(client_id)+"'" +")"
-            connection.execute(query0)
+            try:              
+                query = "insert into dietary_plan values ("+ "'"+str(newPlanID)+"'" +"," "'"+str(userID)+"'," + "'"+str(client_id)+"'" +")"
+                logging.info(query) # save operation in log file
+                connection.execute(query)
+                logging.info("Query was successful!")
+
+            except mysql.connector.Error as err:
+                logging.error(err)
+                logging.error("Query not successful!")
+
 
         # Insert macronutrients
-        query1 = "insert into plan_macronutrients values ("+ "'"+str(newPlanID)+"'" +"," + protein +" , "+ carbs +","+ fat +")" 
-        connection.execute(query1)
+        try:              
+            query = "insert into plan_macronutrients values ("+ "'"+str(newPlanID)+"'" +"," + protein +" , "+ carbs +","+ fat +")" 
+            logging.info(query) # save operation in log file
+            connection.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.connector.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+        
+       
     else:
         # Update an existing dietary plan
-        query = "update plan_macronutrients \
+        try:              
+            query = "update plan_macronutrients \
                 set protein = "  + protein +" , carbs = "+ carbs +", fat = "+ fat +" \
                 where diet_plan_ID_macro in (select diet_plan_ID from dietary_plan where clientID = " +  "'" + str(client_id) + "'"  +")"
-        connection.execute(query)
+            logging.info(query) # save operation in log file
+            connection.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.connector.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+
+
     
     # Show diet plan
     showDietPlan(connection, dietitian, client_id, proteinEntry, carbsEntry, fatEntry)
@@ -76,21 +131,24 @@ def inputDietPlan(connection, dietitian, result, client_id, proteinEntry, carbsE
     
 
 
-# Show diet plan if alraedy existing
+# Show diet plan if already existing
 def showDietPlan(connection, dietitian, client_id, proteinEntry, carbsEntry, fatEntry):
 
-    #my_connect = mysql.connect(host="localhost", user="root", passwd="password", database="fitnessstudio" )
-   # connect = my_connect.cursor()
-
-
     # Get current plan
-    query = "select protein, carbs, fat \
+    try:              
+        query = "select protein, carbs, fat \
             from dietary_plan, plan_macronutrients \
             where diet_plan_ID_macro = diet_plan_ID and clientID = " +  "'" + str(client_id) + "'" 
-     
-    connection.execute(query)
+        logging.info(query) # save operation in log file
+        connection.execute(query)
+        logging.info("Query was successful!")
 
-    
+    except mysql.connector.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+   
+   
+   
     # Fetch results
     result = connection.fetchall()
 
@@ -131,11 +189,6 @@ def showDietPlan(connection, dietitian, client_id, proteinEntry, carbsEntry, fat
     inputDietPlan(connection, dietitian, result, client_id, proteinEntry, carbsEntry, fatEntry)
 
 
-
-
-
-
-    
 
 
 # Buttons and inputs created for diet plan

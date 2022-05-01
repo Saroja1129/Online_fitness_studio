@@ -14,15 +14,7 @@ user = args.input
 local_DB_password = args.pw
 
 python_alias = "python3"
-
-
-def addNewClient():
-
-    Advisor_home.destroy()
-    #call client home_page instead of admin
-    call([python_alias,"addNewClient.py","--input", user, "--pw", local_DB_password])
-
-    
+  
 
 
 # Get complete client list on dietitian home page

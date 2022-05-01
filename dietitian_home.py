@@ -10,6 +10,7 @@ from createSupplements import *
 from feedbackDietitian import * # import all functions from feedback file: for creating a client feedback
 
 import argparse
+import logging
 
 # pass current user information
 parser = argparse.ArgumentParser()
@@ -19,6 +20,16 @@ args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw  
 
+
+# Create log file
+log_file = 'dietitianLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
 
 
 # Get single client information and call subroutines for macronutrients, supplements
@@ -31,14 +42,20 @@ def getSingleClient(i):
     my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
 
+    try:        
+        # Get single client for current advisor
+        query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
+        client_email, client_mobile \
+        from client \
+        where client_id = " +  "'" + str(client_id) + "'" + " and client_id in(select clientID from advises where advID = " +  "'" + str(userID) + "'" + ")"
+        logging.info(query) # save operation in log file
+        connection.execute(query)
+        logging.info("Query was successful!")
 
-    # Get single client for current advisor
-    query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-    client_email, client_mobile \
-    from client \
-    where client_id = " +  "'" + str(client_id) + "'" + " and client_id in(select clientID from advises where advID = " +  "'" + str(userID) + "'" + ")"
-
-    connection.execute(query)
+    except mysql.connector.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+    
 
 
     # Show client details
@@ -87,21 +104,37 @@ dietitian.geometry("1300x900")
 my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password , database="fitnessstudio" )
 connection = my_connect.cursor()
 
-# Fetch current advisor information (ID):
-query = "select ID from advisor where email = " +  "'" + str(user) + "'"  +""
-connection.execute(query)
+
+try:        
+    # Fetch current advisor information (ID):
+    query = "select ID from advisor where email = " +  "'" + str(user) + "'"  +""
+    logging.info(query) # save operation in log file
+    connection.execute(query)
+    logging.info("Query was successful!")
+
+except mysql.connector.Error as err:
+    logging.error(err)
+    logging.error("Query not successful!")
+
+
 userID = connection.fetchall()
 userID = userID[0][0]
 
 
-# Get all clients from current advisor, check if clients fulfill the membership Premium
-query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-client_email, client_mobile \
-from client \
-where client_id in(select clientID from advises where advID = " +  "'" + str(userID) + "'" +" )" 
+try:        
+    # Get all clients from current advisor, check if clients fulfill the membership Premium
+    query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
+    client_email, client_mobile \
+    from client \
+    where client_id in(select clientID from advises where advID = " +  "'" + str(userID) + "'" +" )" 
+    logging.info(query) # save operation in log file
+    connection.execute(query)
+    logging.info("Query was successful!")
 
+except mysql.connector.Error as err:
+    logging.error(err)
+    logging.error("Query not successful!")
 
-connection.execute(query)
 
 myresult = connection.fetchall()
 
