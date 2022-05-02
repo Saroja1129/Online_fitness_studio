@@ -61,7 +61,7 @@ def getinstructor():
     movieList = []
     try:
         try:              
-            query = "select distinct Trainer_id from Instructor where semflag = true" 
+            query = "select distinct Trainer_id from Instructor where groupflag = true" 
             logging.info(query) # save operation in log file
             cursor.execute(query)
             logging.info("Query was successful!")
