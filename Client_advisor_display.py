@@ -19,9 +19,12 @@ python_alias=args.alias
 
 
 
+
+
+
 def GetComment(client):
     
-    if(jobType=="Mental_Coach"):
+ 
         C=tk.Tk()
         C.title("Prescription")   
         print(client) 
@@ -50,7 +53,7 @@ def GetComment(client):
 
 def GetPrescription(client):
     
-    if(jobType=="Doctor"):
+    # if(jobType=="Doctor"):
         A=tk.Tk()
         A.title("Prescription")    
         
@@ -83,28 +86,25 @@ def showFeedback():
     
     con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
     cursor=con.cursor()
-    cursor.execute("select client_id from client where client_email = " +  "'" + str(user) + "'"  )
-    # cursor.execute("select client_feedback from client where client_email ='name1.last@gmail.com'"  )
+    cursor.execute("select client_feedback from client where client_email = " +  "'" + str(user) + "'"  )
     results=cursor.fetchall()
 
     myFeedback = results[0][0]
 
     feedbackEntry = tk.Entry(AC, width = 50) # entry is a text box
     feedbackEntry.insert(END,myFeedback)
-    feedbackEntry.place(x = 550, y = 550, width = 400)
+    feedbackEntry.place(x = 550, y = 550, width = 400)   
+    print(myFeedback)
 
 def GetMacronutrients(client):  
-    if(jobType=="Dietian"):
+
 
         B=tk.Tk()
         B.title("Dietplan")    
         
         con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
-        # cursor.execute("select client_feedback from client where client_email = " +  "'" + str(user) + "'"  )
-        # cursor.execute("select client_id from client where client_email ='name1.last@gmail.com'"  )
-        # results=cursor.fetchall()
-        # client = results[0][0]
+    
         
         Label_1 = tk.Label(B, text ="Protein" )
         Label_2 = tk.Label(B, text ="carb" )
@@ -147,6 +147,7 @@ def GetMacronutrients(client):
 AC=tk.Tk()
 AC.title("Advisor_prescription")
 AC.geometry("900x900")
+print(user,local_DB_password,jobType)
 
 con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
 cursor=con.cursor()
