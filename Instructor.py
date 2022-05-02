@@ -92,9 +92,7 @@ def singleClientWP(client_id):
     cursor = conn.cursor()
     try:        
         # Get workouts for client
-        query = "select Workout,Name,B.Plan_num,ID,C.client_name,B.Client_ID from Instructor as I join Personalized_workout_plan as \
-     B on I.ID=B.Preparer_ID join client as C on C.client_id = B.Client_ID join Workouts on Workouts.Client_ID=B.Client_ID where B.Client_ID\
-         = " + "'" +str(client_id) + "'"
+        query = "select * from Workouts where Client_ID = " + "'" +str(client_id) + "'"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         workouts = cursor.fetchall()
@@ -110,7 +108,6 @@ def singleClientWP(client_id):
 
 
     #inst_id =workouts[0][3]
-    plan_num = workouts[0][2]
     i = 0
 
     #Show workout details
@@ -126,7 +123,7 @@ def singleClientWP(client_id):
         for j in range(1):
             e = Entry(clientWP,width=20, fg='blue')
             e.grid(row=i, column=j) 
-            e.insert(END, Workout[j])
+            e.insert(END, Workout[2-j])
             x1 = 10+j*120
             y1 = 100 +i*30
             e.place(x = x1 , y = y1)    
@@ -136,7 +133,7 @@ def singleClientWP(client_id):
 
     # Create Button Create Workout
     addWorkoutButton = tk.Button(clientWP, text ="Add Workout",
-                        bg ='gray', command=lambda:addworkout(client_id,inst_id, plan_num ,clientWP))
+                        bg ='gray', command=lambda:addworkout(client_id,inst_id ,clientWP))
     addWorkoutButton.place(x = 150, y = 420, width = 200)
 
 
@@ -165,7 +162,7 @@ def contactNew():
     try:        
         # Get all clients that don't have Workouts
         query = "select distinct client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-    client_email, client_mobile from client  where client_id not in (select client_id from Workouts)" 
+    client_email, client_mobile from client  where client_id not in (select Client_ID from Workouts)" 
         # where client_id not in (select client_id from Workouts) <--- NEEDS TO BE PUT IN WHEN 
         logging.info(query) # save operation in log file
         cursor.execute(query)
@@ -181,16 +178,13 @@ def contactNew():
         logging.error("Query not successful!")
     
 
-    client_name  = clients[0][1]
-    client_email = clients[0][7]
-    client_mobile = clients[0][8]
     i=0
     
     for client in clients: 
         
         #Create underlying buttons for the name of clients
         createClientButtonN = tk.Button(newclientEval, text =" Client ",bg ='white', 
-        borderwidth = 0, command=lambda i=i :contactClient(clients[i][3], client_name, client_email, client_mobile))
+        borderwidth = 0, command=lambda i=i :contactClient(clients[i][3], clients[i][1],clients[i][7], clients[i][8]))
         y1 = 50
         y2 = y1+i*30
         createClientButtonN.place(x = 1000, y = y2, width = 100) 
@@ -240,7 +234,7 @@ def deleteworkout(client_id, workouts, i, clientWP):
     try:        
         # Delete workout
         query = "delete from Workouts where Workouts.Client_ID\
-         = " + "'" +str(client_id) + "'" + "and Workouts.Workout =" + "'"+ str(workouts[i][0]) +"'"
+         = " + "'" +str(client_id) + "'" + "and Workouts.Workout =" + "'"+ str(workouts[i][2]) +"'"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         cursor.close()
@@ -260,7 +254,7 @@ def deleteworkout(client_id, workouts, i, clientWP):
     singleClientWP(client_id)
 
 
-def addworkout(client_id,inst_id, plan_num ,clientWP):
+def addworkout(client_id,inst_id ,clientWP):
   
     # Place text label for workout name
     workoutName = tk.Label(clientWP, text ="Workout Name: ", )
@@ -272,12 +266,12 @@ def addworkout(client_id,inst_id, plan_num ,clientWP):
 
     #Place button to execute addition
     addWorkoutButtonN = tk.Button(clientWP, text =" Add ",
-                          bg ='gray', borderwidth = 0, command=lambda :addtodb(clientWP, client_id,inst_id,plan_num,newWorkoutName.get()))
+                          bg ='gray', borderwidth = 0, command=lambda :addtodb(clientWP, client_id,inst_id,newWorkoutName.get()))
     
     addWorkoutButtonN.place(x = 250, y = 520, width = 100)
     
 
-def addtodb(clientWP, client_id,inst_id,plan_num,inp):
+def addtodb(clientWP, client_id,inst_id,inp):
 
     #Check that the input is not empty
     if (inp==""):
@@ -288,7 +282,7 @@ def addtodb(clientWP, client_id,inst_id,plan_num,inp):
     cursor = conn.cursor()
     try:        
         # Add workout to DB
-        query =  "Insert into Workouts values ('"+ str(client_id)+"',"+"'"+str(inst_id)+"',"+str(plan_num)+",'"+str(inp)+"');"
+        query =  "Insert into Workouts values ('"+ str(client_id)+"',"+"'"+str(inst_id)+"','"+str(inp)+"');"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         cursor.close()
@@ -325,9 +319,8 @@ def client_list():
     cursor = conn.cursor()
     try:        
         # Get all clients for current instructor
-        query = "select distinct Name,ID,C.client_name,B.Client_ID, Plan_num from Instructor as I \
-    join Personalized_workout_plan as B on I.ID=B.Preparer_ID join client as C on C.client_id = B.Client_ID\
-     where I.ID = '"+str(inst_id)+"'"
+        query ="select distinct I.Name ,I.ID,C.client_name,B.Client_ID from Instructor as I join Workouts \
+            as B on I.ID = B.Preparer_ID join client as C on C.client_id = B.Client_ID  where I.ID ="+ "'"+str(inst_id)+"'"   
         logging.info(query) # save operation in log file
         cursor.execute(query)
         clients = cursor.fetchall()
@@ -340,14 +333,13 @@ def client_list():
         conn.rollback()
         logging.error(err)
         logging.error("Query not successful!")
-    
 
     i = 0
     #client_id = clients[i][3]
     for client in clients: 
         
         #Create underlying buttons for the name of clients
-        createClientButtonN = tk.Button(clientList, text =" Client ",
+        createClientButtonN = tk.Button(clientList, text =" Details ",
                           bg ='white', borderwidth = 0, command=lambda i=i :singleClientWP(clients[i][3]))
         y1 = 50
         y2 = y1+i*30
@@ -367,7 +359,8 @@ def client_list():
 
 #def sess_list():
 #    call([python_alias,"training_instructor.py","--input", usr, "--pw",pwd])
- 
+
+
 def sess_list():
 
     Sessions = tk.Tk()
