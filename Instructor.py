@@ -1,3 +1,4 @@
+from json.tool import main
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
@@ -5,7 +6,11 @@ from tkinter import *
 from subprocess import call
 from PIL import *
 import argparse
+import logging
 
+
+
+python_alias = "python3"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
@@ -16,6 +21,19 @@ inst_email = args.input
 pwd = args.pw
 usr="root"
 
+log_file = 'instructor.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
+
+
+
+
+
 
 
 # Get single client information
@@ -25,15 +43,27 @@ def singleClientWP(client_id):
     clientWP = tk.Tk()
     clientWP.title("Client Overview")
     clientWP.geometry("1200x900") 
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
-    connection = my_connect.cursor()
-
-    #Query for information
-    query = "select distinct client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
+  
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get single client for current instructor
+        query = "select distinct client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
     client_email, client_mobile from client where client_id = " +  "'" + str(client_id) + "'"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        clientinfo = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
 
-    connection.execute(query)
-    clientinfo = connection.fetchall()
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+        
+    
     client_name= clientinfo[0][1]
     client_email = clientinfo[0][7]
     client_mobile = clientinfo[0][8]
@@ -57,14 +87,28 @@ def singleClientWP(client_id):
             e.place(x = x1 , y = y1)
          
         i=i+1
-
-    # Get workout information for that client
-    query2 = "select Workout,Name,B.Plan_num,ID,C.client_name,B.Client_ID from Instructor as I join Personalized_workout_plan as \
+    
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get workouts for client
+        query = "select Workout,Name,B.Plan_num,ID,C.client_name,B.Client_ID from Instructor as I join Personalized_workout_plan as \
      B on I.ID=B.Preparer_ID join client as C on C.client_id = B.Client_ID join Workouts on Workouts.Client_ID=B.Client_ID where B.Client_ID\
          = " + "'" +str(client_id) + "'"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        workouts = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
 
-    connection.execute(query2)
-    workouts = connection.fetchall()
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+
+
     #inst_id =workouts[0][3]
     plan_num = workouts[0][2]
     i = 0
@@ -98,14 +142,67 @@ def singleClientWP(client_id):
 
     # Create Button Contact Client
     contactClientB = tk.Button(clientWP, text ="Contact Client",
-                        bg ='gray', command=lambda:contactClient(client_id, client_name,client_email,client_mobile, clientWP)) 
+                        bg ='gray', command=lambda:contactClient(client_id, client_name,client_email,client_mobile)) 
     contactClientB.place(x = 550, y = 420, width = 200)
 
     clientWP.mainloop()
 
 
+def contactNew():
 
-def contactClient(client_id, client_name, client_email, client_mobile, clientWP):
+    #Fetch single client information
+    newclientEval = tk.Tk()
+    newclientEval.title("New Clients")
+    newclientEval.geometry("1200x900") 
+
+
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get all clients that don't have Workouts
+        query = "select distinct client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
+    client_email, client_mobile from client where client_id not in (select client_id from Workouts)" 
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        clients = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+   
+    client_name  = clients[0][1]
+    client_email = clients[0][7]
+    client_mobile = clients[0][8]
+    i=0
+    
+    for client in clients: 
+        
+        #Create underlying buttons for the name of clients
+        createClientButtonN = tk.Button(newclientEval, text =" Client ",bg ='white', 
+        borderwidth = 0, command=lambda i=i :contactClient(clients[i][3], client_name, client_email, client_mobile))
+        y1 = 50
+        y2 = y1+i*30
+        createClientButtonN.place(x = 1000, y = y2, width = 100) 
+
+        for j in range(len(client)-3):
+            e = Entry(newclientEval,width=20, fg='blue')
+            e.grid(row=i, column=j) 
+            e.insert(END, client[j])
+            x1 = 10+j*140
+            y1 = 50 +i*30
+            e.place(x = x1 , y = y1)      
+     
+        i=i+1
+
+    newclientEval.mainloop()
+
+
+def contactClient(client_id, client_name, client_email, client_mobile):
 
     # Pop out contaxt box with information
     contact = tk.Tk()
@@ -131,18 +228,25 @@ def contactClient(client_id, client_name, client_email, client_mobile, clientWP)
 
 
 def deleteworkout(client_id, workouts, i, clientWP):
-
-    #Connect to DB
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
-    
-    #Delete query
-    querydel = "delete from Workouts where Workouts.Client_ID\
+    #Delete workout from Database
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Delete workout
+        query = "delete from Workouts where Workouts.Client_ID\
          = " + "'" +str(client_id) + "'" + "and Workouts.Workout =" + "'"+ str(workouts[i][0]) +"'"
-    
-    connection = my_connect.cursor()
-    connection.execute(querydel)
-    my_connect.commit()
-    my_connect.close
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+
     msgbox.showinfo(message="Workout deleted",parent=clientWP)
 
     # Refresh UI   
@@ -168,21 +272,29 @@ def addworkout(client_id,inst_id, plan_num ,clientWP):
     
 
 def addtodb(clientWP, client_id,inst_id,plan_num,inp):
-    
+
     #Check that the input is not empty
     if (inp==""):
         msgbox.showerror(message="Please enter a workout name",title="Error",parent=clientWP)
         return
     
-    #Connect to DB
-    my_connect2 = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
-    connection2 = my_connect2.cursor()
-    
-    #Add workout
-    queryadd = "Insert into Workouts values ('"+ str(client_id)+"',"+"'"+str(inst_id)+"',"+str(plan_num)+",'"+str(inp)+"');"
-    connection2.execute(queryadd)
-    my_connect2.commit()
-    my_connect2.close()
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Add workout to DB
+        query =  "Insert into Workouts values ('"+ str(client_id)+"',"+"'"+str(inst_id)+"',"+str(plan_num)+",'"+str(inp)+"');"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+
     msgbox.showinfo(title="Error",message="Workout Added",parent=clientWP)
     
     #Refresh UI
@@ -194,39 +306,49 @@ def addtodb(clientWP, client_id,inst_id,plan_num,inp):
 def client_list():
 
     #Set up frame
-    Instructor = tk.Tk()
-    Instructor.title("Instructor")
-    Instructor.geometry("1200x900") 
+    clientList = tk.Tk()
+    clientList.title("clientList")
+    clientList.geometry("1200x900") 
 
     # Create title within page
-    Label_Client = tk.Label(Instructor, text ="Client List" )
-    Label_Client.config(font=("Courier", 12))
-    Label_Client.place(x = 10, y = 20)
+    LabelclientList = tk.Label(clientList, text ="Client List" )
+    LabelclientList.config(font=("Courier", 12))
+    LabelclientList.place(x = 10, y = 20)
 
-    #Connect to db
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
-    connection = my_connect.cursor()
-
-    #Query for client info
-    query = "select distinct Name,ID,C.client_name,B.Client_ID, Plan_num from Instructor as I \
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get all clients for current instructor
+        query = "select distinct Name,ID,C.client_name,B.Client_ID, Plan_num from Instructor as I \
     join Personalized_workout_plan as B on I.ID=B.Preparer_ID join client as C on C.client_id = B.Client_ID\
      where I.ID = '"+str(inst_id)+"'"
-    connection.execute(query)
-    myresult = connection.fetchall()
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        clients = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+    
 
     i = 0
-    #client_id = myresult[i][3]
-    for client in myresult: 
+    #client_id = clients[i][3]
+    for client in clients: 
         
         #Create underlying buttons for the name of clients
-        createClientButtonN = tk.Button(Instructor, text =" Client ",
-                          bg ='white', borderwidth = 0, command=lambda i=i :singleClientWP(myresult[i][3]))
+        createClientButtonN = tk.Button(clientList, text =" Client ",
+                          bg ='white', borderwidth = 0, command=lambda i=i :singleClientWP(clients[i][3]))
         y1 = 50
         y2 = y1+i*30
         createClientButtonN.place(x = 1000, y = y2, width = 100) 
 
         for j in range(len(client)):
-            e = Entry(Instructor,width=20, fg='blue')
+            e = Entry(clientList,width=20, fg='blue')
             e.grid(row=i, column=j) 
             e.insert(END, client[j])
             x1 = 10+j*140
@@ -235,11 +357,12 @@ def client_list():
      
         i=i+1
         
-    Instructor.mainloop()
+    clientList.mainloop()
 
+def sess_list():
+    call([python_alias,"training_instructor.py","--input", usr, "--pw",pwd])
 
-
-    
+'''  
 def sess_list():
 
     Sessions = tk.Tk()
@@ -252,14 +375,25 @@ def sess_list():
     Label_Sessions.place(x = 10, y = 20)
 
     # Connect and query
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )    
-    
-    query = "select * from training_session where session_instructor_id ='" + str(inst_id)+"'"
 
-    connectionSess = my_connect.cursor()
-    connectionSess.execute(query)
-    sessionsList = connectionSess.fetchall()
-  
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get all sessions for current instructor
+        query = "select * from training_session where session_instructor_id ='" + str(inst_id)+"'"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        sessionsList = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+    
     i = 0
     for session in sessionsList: 
         
@@ -281,7 +415,9 @@ def sess_list():
      
         i=i+1
     Sessions.mainloop()
-    
+'''  
+
+
 def sessionInfo(session):
     sess_ID = session[0]
     sess_Link = session[1]
@@ -322,11 +458,25 @@ def sem_list():
 
     
     # Query seminars
-    querySem = "select * from Fitness_seminar where FS_Inst_ID ='" + str(inst_id)+"'"
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
-    connectionSem = my_connect.cursor()
-    connectionSem.execute(querySem)
-    seminars = connectionSem.fetchall()
+
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get all seminars for current instructor
+        query = "select * from Fitness_seminar where FS_Inst_ID ='" + str(inst_id)+"'"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        seminars = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+    
   
     i = 0
     for seminar in seminars: 
@@ -363,7 +513,7 @@ def Semzoom(semline):
     e = Entry(semZoomInfo,width=24, fg='blue')
     e.insert(END,  str(Semzoomlink))
     e.place(x = 60 , y = 60)
-   # Semzoom.mainloop()
+    semZoomInfo.mainloop()
 
 
 
@@ -379,13 +529,25 @@ def training():
     Label_Client.config(font=("Courier", 12))
     Label_Client.place(x = 10, y = 20)
 
-    # Query trainer
-    queryTrainer = "select Trainer_id from Instructor where ID ='" + str(inst_id)+"'"
-    queryTrainees = "select * from Instructor where Trainer_id ='" + str(inst_id)+"'"
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
-    connectiontrainees = my_connect.cursor()
-    connectiontrainees.execute(queryTrainees)
-    trainees = connectiontrainees.fetchall()
+    # Query trainees
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+    try:        
+        # Get all trainees for current instructor
+        query = "select * from Instructor where Trainer_id ='" + str(inst_id)+"'"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        trainees = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+
   
     i = 0
     for trainee in trainees: 
@@ -427,9 +589,6 @@ def contactTrainee(Trainee):
     e = Entry(contact,width=24, fg='blue')
     e.insert(END, "Email: " + str(Tee_email))
     e.place(x = 60 , y = 120)
-  #  e = Entry(contact,width=24, fg='blue')
-  #  e.insert(END, "Number: " + str(client_mobile))
-  #  e.place(x = 60 , y = 180)
     contact.mainloop()
 
 
@@ -437,26 +596,38 @@ def contactTrainee(Trainee):
 
 
 # Instantiate instructor_home class
+# Find info on current instructor
+conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+cursor = conn.cursor()
+try:       
 
-#inst_email = "Isflwr@555.net"
-queryIn = "select Name,ID from Instructor where Email = '" + str(inst_email)+"'"
+    # Get all trainees for current instructor
+    query = "select Name,ID from Instructor where Email = '" + str(inst_email)+"'"
+    logging.info(query) # save operation in log file
+    cursor.execute(query)
+    instinfo = cursor.fetchall()
+    inst_name = instinfo[0][0]
+    inst_id = instinfo[0][1]
 
+    # Check if there is a trainer for the current instructor
+    queryTrainer = "select Trainer_id from Instructor where ID = '" + str(inst_id)+"'"
+    logging.info(query) # save operation in log file
+    cursor.execute(queryTrainer)
+    tr_id = cursor.fetchall()[0][0]
+    cursor.close()
+    conn.commit()
+    conn.close()
+    logging.info("Query was successful!")
 
-
-my_connectI = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
-conin = my_connectI.cursor()
-conin.execute(queryIn)
-instinfo=conin.fetchall()
+except mysql.Error as err:
+    conn.rollback()
+    logging.error(err)
+    logging.error("Query not successful!")
 inst_name = instinfo[0][0]
 inst_id = instinfo[0][1]
 
-queryTrainer = "select Trainer_id from Instructor where ID = '" + str(inst_id)+"'"
 
-
-conin.execute(queryTrainer)
-tr_id = conin.fetchall()[0][0]
-
-
+# Instructor home window 
 Instructor_home=tk.Tk()
 Instructor_home.title("Instructor_Home_Page")
 Instructor_home.geometry("900x900")
@@ -468,36 +639,59 @@ Label_IH.place(x = 10, y = 20)
 # Create Button Show My Clients
 showClients = tk.Button(Instructor_home, text ="Show My Clients",
                       bg ='gray', command=client_list)
-showClients.place(x = 150, y = 140, width = 200)
+showClients.place(x = 150, y = 140, width = 220)
 
 # Create Button Show Sessions
 showSessions = tk.Button(Instructor_home, text ="Show My Sessions",
                       bg ='gray', command=sess_list)
-showSessions.place(x = 150, y = 240, width = 200)
+showSessions.place(x = 150, y = 240, width = 220)
 
 # Create Button Show Seminars
 showSeminars = tk.Button(Instructor_home, text ="Show My Seminars",
                       bg ='gray', command=sem_list)
-showSeminars.place(x = 150, y = 340, width = 200)       
+showSeminars.place(x = 150, y = 340, width = 220)       
 
 
-# Create Button Show Seminars
+# Create Button Show Trainees
 showSeminars = tk.Button(Instructor_home, text ="Show My Trainees",
                       bg ='gray', command=training)
-showSeminars.place(x = 150, y = 440, width = 200)
+showSeminars.place(x = 150, y = 440, width = 220)
+
+# Create Button Show Trainees
+showSeminars = tk.Button(Instructor_home, text ="Contact New Client",
+                      bg ='gray', command=contactNew)
+showSeminars.place(x = 150, y = 540, width = 220)
 
 if (str(tr_id) != "None"):
-    # Create Button Show Trainer
-    queryTrEmail =  "select Email,Name from Instructor where ID = '" + str(tr_id)+"'"
-    my_connect = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )  
-    connectiontrainer = my_connect.cursor()
-    connectiontrainer.execute(queryTrEmail)
-    trainerInfo = connectiontrainer.fetchall()
+    # Query for Trainer email 
+    conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
+    cursor = conn.cursor()
+
+    try:        
+        # Get trainer info for instructor
+        query = "select Email,Name from Instructor where ID = '" + str(tr_id)+"'"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        trainerInfo = cursor.fetchall()
+        cursor.close()
+        conn.commit()
+        conn.close()
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        conn.rollback()
+        logging.error(err)
+        logging.error("Query not successful!")
+     
     tr_email= trainerInfo[0][0]
     tr_name = trainerInfo[0][1]
+
+    # Create label for training instructor
     Label_IH = tk.Label(Instructor_home, text ="Training supervisor: " +str(tr_name)+", email: " +str(tr_email) )
     Label_IH.config(font=("Courier", 12))
     Label_IH.place(x = 10, y = 70)
+
+#If no supervisor => lead Trainer
 if (str(tr_id) == "None"):
     Label_IH = tk.Label(Instructor_home, text ="Lead Trainer" )
     Label_IH.config(font=("Courier", 12))
