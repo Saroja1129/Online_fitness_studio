@@ -86,7 +86,7 @@ def training_sessions1():
     Client.destroy()
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
     call([python_alias,"training_session.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
-    print("training")
+    #print("training")
 
 def fitness_seminars(kind):
     Rec_fitness_seminars = tk.Tk()
@@ -157,7 +157,7 @@ def Advisor_Request():
     e = int(S[2:8]) 
     #print(e)
     a=Adv_type.get()
-    print(a)
+    #print(a)
     con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
     cursor=con.cursor()
     try:
@@ -172,7 +172,7 @@ def Advisor_Request():
         logging.error(err)
         logging.error("Query not successful!")
         
-    print(results1)
+    #print(results1)
     l=len(results1)
     S = str(results1[l-1]) 
     f = int(S[2:8]) 
@@ -203,10 +203,10 @@ def Advisor_Request():
     
 def Advisor_access():
     a=Adv_type.get()
-    print(a)
+    #print(a)
     Client.destroy()
     call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password,"--alias", python_alias,"--Job",a,])
-    print("Hello")
+   
     
     
 def premium():
@@ -227,10 +227,10 @@ cursor.execute("select mem_level from membership join client on\
               mem_client_id=client_id where client_email =" + "'" + str(user) +"'")
 results=cursor.fetchall()
 l=len(results)
-print(l)
+#print(l)
 S = str(results[l-1]) 
 b= S[2]
-print(b)
+#print(b)
 
 if(b=='F'):
     Type="Free"

@@ -84,7 +84,7 @@ def Registeration():
             logging.error("Query not successful!")
             
             
-        print(results)
+        #print(results)
         l=len(results)
         S = str(results[l-1]) 
         e = int(S[2:8])+1 #session_id
