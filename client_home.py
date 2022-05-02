@@ -63,7 +63,6 @@ def train_sessions(kind):
     
 def training_sessions1():
     Client.destroy()
-    #call(["python","Premium.py"])
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
     call([python_alias,"training_session.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
     print("training")
@@ -134,18 +133,22 @@ def Advisor_Request():
     cursor.execute("insert into advises (clientID,advID) values(%s,%s)",
                    [(e),(f)])
     con.commit()
-    msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
-    Client.destroy()
-    #call(["python","Premium.py"])
+    msgbox.showinfo("Login status","ADVISOR REQUESTED SUCCESSFULLY")
+    #Client.destroy()
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
-    call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
-    #call([python_alias,"Client_advisor_display.py","--input", user, "--pw", local_DB_password,"--Job",a])
+    #call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
+    
+def Advisor_access():
+    a=Adv_type.get()
+    Client.destroy()
+    call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password,"--alias", python_alias,"--Job",a,])
+    print("Hello")
+    
     
 def premium():
     Client.destroy()
     #call the buy premium page
     call([python_alias,"Premium.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
-    #call([python_alias,"Premium.py"])
     return True
 
 
@@ -300,5 +303,8 @@ elif(Type=="Premium"):
     regibutton1 = tk.Button(Client, text ="Request", font=('bold',30),
                           bg ='silver', command=Advisor_Request)
     regibutton1.place(x = 180, y = 310, width = 150, height = 50)
+    regibutton2 = tk.Button(Client, text ="Access Advisor", font=('bold',30),
+                          bg ='silver', command=Advisor_access)
+    regibutton2.place(x = 180, y = 400, width = 250, height = 50)
 
 Client.mainloop()
