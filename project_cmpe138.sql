@@ -69,7 +69,7 @@ CREATE TABLE Instructor (
 );
 
 
-CREATE TABLE Workouts (
+CREATE TABLE Workout (
     Client_ID varchar(6),
     Preparer_ID varchar(6),
     Workout varchar(50), 
@@ -290,18 +290,18 @@ insert into plan_supplements values ('11111', 25, 100, 1500, 2000);
 insert into plan_supplements values ('11112', 25, 250, 1500, 1500);
 
 
-insert into Workouts values ('123456','A00001','Back and Legs 1');
-insert into Workouts values ('123456','A00001','Chest 2');
-insert into Workouts values ('123456','A00001','Arms 1');
-insert into Workouts values ('123457','A00001','Back and Legs 1');
-insert into Workouts values ('123457','A00001','Chest and Shoulders 1');
-insert into Workouts values ('123457','A00001','Arms 2');
-insert into Workouts values ('123458','A00001','Whole Body 1');
-insert into Workouts values ('123458','A00001','Whole Body 2');
-insert into Workouts values ('123458','A00002','Bodyweight 1');
-insert into Workouts values ('123458','A00002','Bodyweight 2');
-insert into Workouts values ('123461','A00003','Whole Body 1');
-insert into Workouts values ('123461','A00003','Whole Body 2');
+insert into Workout values ('123456','A00001','Back and Legs 1');
+insert into Workout values ('123456','A00001','Chest 2');
+insert into Workout values ('123456','A00001','Arms 1');
+insert into Workout values ('123457','A00001','Back and Legs 1');
+insert into Workout values ('123457','A00001','Chest and Shoulders 1');
+insert into Workout values ('123457','A00001','Arms 2');
+insert into Workout values ('123458','A00001','Whole Body 1');
+insert into Workout values ('123458','A00001','Whole Body 2');
+insert into Workout values ('123458','A00002','Bodyweight 1');
+insert into Workout values ('123458','A00002','Bodyweight 2');
+insert into Workout values ('123461','A00003','Whole Body 1');
+insert into Workout values ('123461','A00003','Whole Body 2');
 
 
 
