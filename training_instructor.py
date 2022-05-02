@@ -5,6 +5,7 @@ from tkinter import *
 from subprocess import call
 from PIL import *
 import argparse
+import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
@@ -18,6 +19,13 @@ local_DB_password = "password"
 #python_alias= args.alias
 python_alias="python3"
 
+log_file = "training_instructor.txt"
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, handlers=[log_fh])
 
 def question():
     tkmb.showinfo("", "Any questions, please contact our office!")
@@ -32,6 +40,9 @@ def sessionsContent():
     label = tk.Label(sessions, text ="Training Sessions" )
     label.config(font=("Courier", 20))
     label.place(x = 10, y = 20)
+
+    questionButton = tk.Button(sessions, text ="Questions?", bg ='gray', command=question)
+    questionButton.place(x = 430, y = 500, width = 100)
 
     sessionsList = results 
     print(sessionsList)
@@ -52,27 +63,32 @@ def sessionsContent():
         
         i=i+1
 
-        questionButton = tk.Button(sessions, text ="Questions?", bg ='gray', command=question)
-        questionButton.place(x = 430, y = 500, width = 100)
+        #questionButton = tk.Button(sessions, text ="Questions?", bg ='gray', command=question)
+        #questionButton.place(x = 430, y = 500, width = 100)
 
     sessions.mainloop()
 
 
 #inst_email = "Isflwr@555.net"
-inst_email = "kyra.forester@gmail.com"
+#inst_email = "kyra.forester@gmail.com"
+inst_email = "jsmith@555.net"
 
-con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
-cursor=con.cursor()
+try:
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
+    cursor=con.cursor()
 
-cursor.execute("select Name,ID from Instructor where Email = '" + str(inst_email)+"'")
-results=cursor.fetchall()
+    cursor.execute("select Name,ID from Instructor where Email = '" + str(inst_email)+"'")
+    results=cursor.fetchall()
+    instructor_name = results[0][0]
+    instructor_id = results[0][1]
+
+    cursor.execute("select * from training_session where session_instructor_id = '" + str(instructor_id)+"'")
+    results=cursor.fetchall()
+except mysql.Error as err:
+     logging.error(err)
+     logging.error("Query not successful!")
+
 #print(results)
-instructor_name = results[0][0]
-instructor_id = results[0][1]
-
-cursor.execute("select * from training_session where session_instructor_id = '" + str(instructor_id)+"'")
-results=cursor.fetchall()
-print(results)
 
 training_instructor=tk.Tk()
 training_instructor.title("Training Session Page for Instructors")
