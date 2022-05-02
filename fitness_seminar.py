@@ -127,7 +127,7 @@ def submit_details():
       cursor=con.cursor()
     #  print("insert into Fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
       #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
-      cursor.execute("insert into Fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
+      cursor.execute("insert into Fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[(a),(b),(c),(d),(e),(f),(g),(h)])
       con.commit()
       results=cursor.fetchall()
       msgbox.showinfo("Create status","Fitness_seminar creation succesfull")
