@@ -190,6 +190,7 @@ create table mental_coaching_plan(
 M_C_plan_id  varchar(6) not null,
 M_C_ID    varchar(6) not null,
 clientID varchar(6),
+M_C_comment varchar(50),
 primary key (M_C_plan_id),
 foreign key (M_C_ID) references advisor(ID)
 on delete cascade
@@ -291,8 +292,8 @@ insert into Lab_test values('121','Mona',  '670046' ,'123457');
 insert into Lab_test values('122','Diana', '778543','123461' );
 
 
-insert into mental_coaching_plan values('1100', '832594', '123457');
-insert into mental_coaching_plan values('1300', '832594', '123461');
+insert into mental_coaching_plan values('1100', '832594', '123457',null);
+insert into mental_coaching_plan values('1300', '832594', '123461','Be fit');
 
 insert into dietary_plan values ('11111','468799', '123457');
 insert into dietary_plan values ('11112', '468799', '123461');
@@ -322,10 +323,11 @@ insert into Workouts values ('123457','A00001','2','Chest and Shoulders 1');
 insert into Workouts values ('123457','A00001','2','Arms 2');
 insert into Workouts values ('123458','A00001','3','Whole Body 1');
 insert into Workouts values ('123458','A00001','3','Whole Body 2');
-insert into Workouts values ('123458','A00002','1','Bodyweight 1');
+insert into Workouts values ('123459','A00002','1','Bodyweight 1');
 insert into Workouts values ('123460','A00002','2','Bodyweight 2');
 insert into Workouts values ('123461','A00003','1','Whole Body 1');
 insert into Workouts values ('123461','A00003','1','Whole Body 2');
+
 
 
 insert into training_session values ('recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', 'A00010');
