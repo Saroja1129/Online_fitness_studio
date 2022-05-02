@@ -29,7 +29,7 @@ def GetComment(client):
  
         C=tk.Tk()
         C.title("Prescription")   
-        print(client) 
+       
         
         con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
@@ -39,7 +39,7 @@ def GetComment(client):
         cursor.execute(query)
         result2=cursor.fetchall()
         
-        print(result2)
+       
         
         i=2
         for client in result2: 
@@ -68,7 +68,7 @@ def GetPrescription(client):
         
         Label_1 = tk.Label(A, text ="Test name" )
         Label_1.grid(row = 1, column = 0)
-        query="select test_name from lab_test where clientID = " +  "'" + str(client) + "'"
+        query="select test_name from Lab_test where clientID = " +  "'" + str(client) + "'"
         cursor.execute(query)
         result1=cursor.fetchall()
         
@@ -96,7 +96,7 @@ def showFeedback():
     feedbackEntry = tk.Entry(AC, width = 50) # entry is a text box
     feedbackEntry.insert(END,myFeedback)
     feedbackEntry.place(x = 550, y = 550, width = 400)   
-    print(myFeedback)
+    
 
 def GetMacronutrients(client):  
 
@@ -127,7 +127,7 @@ def GetMacronutrients(client):
     
         
         query="select protein,carbs,fat,vitaminD3,vitaminC,magnesium,omega3 \
-                    from Dietary_Plan join plan_macronutrients on diet_plan_ID = diet_plan_ID_macro\
+                    from dietary_plan join plan_macronutrients on diet_plan_ID = diet_plan_ID_macro\
                     join plan_supplements on diet_plan_ID_macro=diet_plan_ID_suppl\
                     where clientID = " +  "'" + str(client) + "'"
         cursor.execute(query)
@@ -149,7 +149,7 @@ def GetMacronutrients(client):
 AC=tk.Tk()
 AC.title("Advisor_prescription")
 AC.geometry("900x900")
-print(user,local_DB_password,jobType)
+
 
 con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
 cursor=con.cursor()
@@ -157,7 +157,7 @@ cursor.execute("select client_id from client where client_email =" +  "'" + str(
 results=cursor.fetchall()
 client = results[0][0]
 
-print(client)
+
 Label_IH = tk.Label(AC, text ="Feedback from Advisor" )
 Label_IH.config(font=("Courier", 12))
 Label_IH.place(x = 500, y = 500)
