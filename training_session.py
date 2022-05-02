@@ -1,3 +1,4 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as tkmb 
@@ -5,6 +6,7 @@ from tkinter import *
 from subprocess import call
 from PIL import *
 import argparse
+import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input", help="Current user ")
@@ -12,10 +14,18 @@ parser.add_argument("--pw", help="Local password for DB engine")
 parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
-python_alias= args.alias
-local_DB_password = args.pw
+#python_alias= args.alias
+python_alias="python3"
+#local_DB_password = args.pw
+local_DB_password = "password"
 
+log_file = "training_session.txt"
+log_fh = logging.FileHandler(log_file)
 
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, handlers=[log_fh])
 
 def print_answers():
     value = value_inside.get()
@@ -26,13 +36,17 @@ def print_answers():
     #print("============")
     #print(value)
     #print("__", type(user))
-
-    con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio")
-    cursor=con.cursor()
-    #cursor.execute("select mem_level from membership join client on mem_client_id = client_id where client_email = user") 
-    cursor.execute("select mem_level from membership join client on mem_client_id = client_id where client_email =" + "'" + str(user) +"'")
-
-    obversations = cursor.fetchall() 
+    try:
+        con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio")
+        cursor=con.cursor()
+        query = "select mem_level from membership join client on mem_client_id = client_id where client_email =" + "'" + str(user) +"'"
+        cursor.execute(query)
+        obversations = cursor.fetchall() 
+        logging.info(query)
+        logging.info("Query was successfully!")
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
 
     b = str(obversations[len(obversations)-1])[2]
 
@@ -61,17 +75,23 @@ def print_answers():
         #call([python_alias,"admin_login.py","--input", user, "--pw",local_DB_password])
 
 root = tk.Tk()
-root.title("Client -- Training Session")
+root.title("Training Session Page for Clients")
 root.geometry('700x500')
-
-con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
-cursor=con.cursor()
-cursor.execute("select Instructor.name, session_type, session_individual_group, session_zoom_link, training_session.session_id, session_instructor_id, client_id \
+try:
+    con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
+    cursor=con.cursor()
+    query = "select Instructor.name, session_type, session_individual_group, session_zoom_link, training_session.session_id, session_instructor_id, client_id \
 from training_session join training_session_client join Instructor \
 where training_session.session_id = training_session_client.session_id \
-and training_session.session_instructor_id = Instructor.ID")
+and training_session.session_instructor_id = Instructor.ID"
+    cursor.execute(query)
+    results=cursor.fetchall()
+    logging.info(query)
+    logging.info("Query was successful!")
+except mysql.Error as err:
+    logging.error(err)
+    logging.error("Query not successful!")
 
-results=cursor.fetchall()
 
 option_item_list = list()
 result_list = list()
