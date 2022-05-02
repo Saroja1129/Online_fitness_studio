@@ -68,29 +68,18 @@ CREATE TABLE Instructor (
     -- FK instructor to instructor recursive relationship
 );
 
-CREATE TABLE Personalized_workout_plan (
-    Client_ID varchar(6),
-    Preparer_ID varchar(6),
-    Plan_num int,
-    primary key (Client_ID, Plan_num),
-    foreign key (Preparer_ID) references Instructor(ID) on delete set null,
-    -- FK to instructor ID as preparer.
-    foreign key (Client_ID) references client(client_id) on delete cascade on update cascade
-    -- FK to client as user.
-);
 
 CREATE TABLE Workouts (
     Client_ID varchar(6),
     Preparer_ID varchar(6),
-    Plan_num int,
     Workout varchar(50), 
     -- reference to a particular program
-    primary key (Client_ID, Plan_num, Workout),
-    foreign key (Preparer_ID) references Instructor(ID) on delete set null,
+    primary key (Client_ID, Preparer_ID, Workout),
+    foreign key (Preparer_ID) references Instructor(ID) on delete cascade on update cascade,
     -- FK to instructor ID as typical for multi-valued attr.
-    foreign key (Client_ID, Plan_num) references Personalized_workout_plan (Client_ID, Plan_num) on delete cascade on update cascade
+    foreign key (Client_ID) references client (client_id) on delete cascade on update cascade
     -- FK to client as user.
-    -- FK to plan_num as typical for multi-valued attr.
+  
 
 );
 
@@ -255,11 +244,11 @@ INSERT into Instructor VALUES
 ('A00005','Hyla Ranz','16000','Hranz@555.net', 'cbcdc1d30db076ecd7d9df91becabe1bceb682f372fd36b509dd1314cb90b3b8', FALSE, FALSE, TRUE, 'A00001',0), -- hranz
 ('A00006','Remy Madden','17000','Rmadden@555.net', 'd71b0b9ea8439850dad553b22547f050da6ebfb74ff20430c702dc04610c2e20', TRUE,FALSE,TRUE,'A00002',0), -- rmadden
 ('A00010','kyra Forster','28000','kyra.forester@gmail.com', 'f4eff4179495829be8793c1dd4e53f336b8a1337fedc619d27f93e0c0890341c', TRUE, TRUE, FALSE, NULL,0), -- kforster
-('A00020','vikas tadepu','23000','vikas.tadepu@gmail.com', '1f726457d5f156325ad80247cbd7e7bfdf5a3e26b2ced235d0d33e4fc217849c', TRUE, FALSE, TRUE, 'A00001',0), -- vtadeupu
+('A00020','vikas tadepu','23000','vikas.tadepu@gmail.com', '1f726457d5f156325ad80247cbd7e7bfdf5a3e26b2ced235d0d33e4fc217849c', TRUE, FALSE, TRUE, 'A00003',0), -- vtadeupu
 ('A00030','Alex Zalzinayak','24000','Alex.Zalzinayak@gmail.com', '09953161148a9b09bc860b774a1a5b101f76b76274a94573717c6b14daaa7867', TRUE,FALSE,FALSE,NULL,0), -- azaliznyak
-('A00040','saroja kandula','18000','saroja.kandula@gmail.com', 'a312e6736a53c42cfe92feea3701894b66d422c712e7004e84aead3394518a75',TRUE, FALSE, FALSE, 'A00002',0), -- skandula
+('A00040','saroja kandula','18000','saroja.kandula@gmail.com', 'a312e6736a53c42cfe92feea3701894b66d422c712e7004e84aead3394518a75',TRUE, FALSE, FALSE, 'A00005',0), -- skandula
 ('A00050','vineeth kiragi','16000','vineeth.kiragi@gmail.com', 'c42280cac1856c9ce7a5a954a213c09e719a63610a9eb6c1d85532f8f73603a5', FALSE, FALSE, TRUE, 'A00001',0), -- vkiradi
-('A00060','Jasmine Wang','17000','Jasmine.Wang@gmail.com', 'cdfb4570b67ee7b9d100972c40cfe926ffaf058023040155fb41e3afadfc37b2', TRUE,FALSE,TRUE,'A00002',0); -- jwang
+('A00060','Jasmine Wang','17000','Jasmine.Wang@gmail.com', 'cdfb4570b67ee7b9d100972c40cfe926ffaf058023040155fb41e3afadfc37b2', TRUE,FALSE,TRUE,'A00004',0); -- jwang
 
 
 INSERT into membership VALUES
@@ -306,27 +295,21 @@ insert into plan_supplements values ('11111', 25, 100, 1500, 2000);
 insert into plan_supplements values ('11112', 25, 250, 1500, 1500);
 
 
--- Personalized Workout Plans:
-insert into Personalized_workout_plan values ('123456','A00001','1');
-insert into Personalized_workout_plan values ('123457','A00001','2');
-insert into Personalized_workout_plan values ('123458','A00001','3');
-insert into Personalized_workout_plan values ('123459','A00002','1');
-insert into Personalized_workout_plan values ('123460','A00002','2');
-insert into Personalized_workout_plan values ('123461','A00003','1');
 
 
-insert into Workouts values ('123456','A00001','1','Back and Legs 1');
-insert into Workouts values ('123456','A00001','1','Chest 2');
-insert into Workouts values ('123456','A00001','1','Arms 1');
-insert into Workouts values ('123457','A00001','2','Back and Legs 1');
-insert into Workouts values ('123457','A00001','2','Chest and Shoulders 1');
-insert into Workouts values ('123457','A00001','2','Arms 2');
-insert into Workouts values ('123458','A00001','3','Whole Body 1');
-insert into Workouts values ('123458','A00001','3','Whole Body 2');
-insert into Workouts values ('123459','A00002','1','Bodyweight 1');
-insert into Workouts values ('123460','A00002','2','Bodyweight 2');
-insert into Workouts values ('123461','A00003','1','Whole Body 1');
-insert into Workouts values ('123461','A00003','1','Whole Body 2');
+
+insert into Workouts values ('123456','A00001','Back and Legs 1');
+insert into Workouts values ('123456','A00001','Chest 2');
+insert into Workouts values ('123456','A00001','Arms 1');
+insert into Workouts values ('123457','A00001','Back and Legs 1');
+insert into Workouts values ('123457','A00001','Chest and Shoulders 1');
+insert into Workouts values ('123457','A00001','Arms 2');
+insert into Workouts values ('123458','A00001','Whole Body 1');
+insert into Workouts values ('123458','A00001','Whole Body 2');
+insert into Workouts values ('123458','A00002','Bodyweight 1');
+insert into Workouts values ('123458','A00002','Bodyweight 2');
+insert into Workouts values ('123461','A00003','Whole Body 1');
+insert into Workouts values ('123461','A00003','Whole Body 2');
 
 
 
