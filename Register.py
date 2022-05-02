@@ -1,3 +1,4 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
@@ -7,6 +8,16 @@ from tkinter import *
 from subprocess import call
 from PIL import *
 import argparse
+import logging
+
+# Create log file
+log_file = 'clientLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level,handlers=[log_fh])
 
 #pass current user informations
 #add your local DB password here
@@ -19,6 +30,7 @@ args = parser.parse_args()
 #user="name1.last@gmail.com"
 
 python_alias=args.alias
+#python_alias="python"
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
 
@@ -59,31 +71,64 @@ def Registeration():
     else:
         my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
         connection = my_connect.cursor()
-        query ="select max(client_id) from client"
-        connection.execute(query)
-        results = connection.fetchall()
-        
-        #print(results)
+        try:
+            #retreive max client id  
+            query ="select max(client_id) from client"
+            logging.info(query) # save operation in log file
+            connection.execute(query)
+            results = connection.fetchall()
+            logging.info("Query was successful!")
+            
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+            
+            
+        print(results)
         l=len(results)
         S = str(results[l-1]) 
         e = int(S[2:8])+1 #session_id
         #print(e)
         con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
-        cursor.execute("insert into client (client_admin_id,client_id,client_bmi,\
-                       client_email,client_pwd,client_name,client_mobile,\
-                           client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                       [(adminid),(e),(bmi),(email),(password),(user),(mobile),(weight),(height),(age),(sex)])
-        con.commit()
+        try:
+            #inserting registration info into client table
+            query="insert into client (client_admin_id,client_id,client_bmi,\
+                   client_email,client_pwd,client_name,client_mobile,\
+                client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            logging.info(query) # save operation in log file
+            cursor.execute(query,[(adminid),(e),(bmi),(email),(password),(user),(mobile),(weight),(height),(age),(sex)])
+            #cursor.execute(query)
+            con.commit()
+            logging.info("Query was successful!")
+            
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+         
+            
+        #cursor.execute("insert into client (client_admin_id,client_id,client_bmi,\
+        #              client_email,client_pwd,client_name,client_mobile,\
+        #                  client_weight,client_height,client_age,client_gender) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        #               [(adminid),(e),(bmi),(email),(password),(user),(mobile),(weight),(height),(age),(sex)])
+        
         membership_level="Free"
         membership_cost=0
         con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
-        cursor.execute("insert into membership (mem_client_id,mem_level,mem_cost,mem_admin_id) values(%s,%s,%s,%s)",[(e),(membership_level),(membership_cost),(adminid)])
-        con.commit()
-        #cursor.execute("select * from admin where admin_email = %s and admin_pwd=%s", [(user),(passw)] )
-        results=cursor.fetchall()
-        msgbox.showinfo("Insert status","Registeration Successful")
+    
+        try:
+            #inserting registeration info into membership table
+            query="insert into membership (mem_client_id,mem_level,mem_cost,mem_admin_id) values(%s,%s,%s,%s)"
+            logging.info(query)
+            connection.execute(query,[(e),(membership_level),(membership_cost),(adminid)])
+            con.commit()
+            logging.info("Query was successful!")
+            msgbox.showinfo("Insert status","Registeration Successful")
+            
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
         
         Regi.destroy()
         call([python_alias,"admin_login.py",email,membership_level])
