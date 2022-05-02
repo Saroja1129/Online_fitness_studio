@@ -23,7 +23,7 @@ python_alias= args.alias
 def Sem_id_generator():
      con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
      cursor=con.cursor() 
-     cursor.execute("select fs_sem_id from fitness_seminar")
+     cursor.execute("select Fs_sem_id from Fitness_seminar")
      results = cursor.fetchall()
      a=len(results)
      print(results[a-1])
@@ -78,7 +78,7 @@ def getinstructor():
     cursor=con.cursor()
     movieList = []
     try:
-      cursor.execute("select distinct trainer_id from instructor where semflag = true")
+      cursor.execute("select distinct Trainer_id from Instructor where semflag = true")
       results = cursor.fetchall()
       for a in results:
         data =  (a[0])
@@ -102,7 +102,7 @@ def submit_details():
     a=fs_zoomlink.get()
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor() 
-    cursor.execute("select fs_sem_id from fitness_seminar order by fs_sem_id")
+    cursor.execute("select Fs_sem_id from Fitness_seminar order by Fs_sem_id")
     results = cursor.fetchall()
     l=len(results)
     print(l)
@@ -123,9 +123,9 @@ def submit_details():
     try:
       con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
       cursor=con.cursor()
-      print("insert into fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
+      print("insert into Fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
       #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
-      cursor.execute("insert into fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
+      cursor.execute("insert into Fitness_seminar values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f,g,h])
       con.commit()
       results=cursor.fetchall()
       msgbox.showinfo("Create status","Fitness_seminar creation succesfull")
@@ -177,7 +177,7 @@ Label4.place(x = 250, y = 250)
 adminid = tk.Button(FS, text ="Select Organiser", bg ='white',command =getadmin)
 adminid.place(x = 400, y = 250, width = 200)
 
-submitbtn = tk.Button(FS, text ="Fetch available seminar instructors", bg ='white',command=getinstructor)
+submitbtn = tk.Button(FS, text ="Fetch available seminar Instructors", bg ='white',command=getinstructor)
 submitbtn.place(x = 400, y = 350, width = 200)
 
 # EntryFSInst = tk.Entry(FS, width = 35)
