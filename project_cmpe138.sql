@@ -1,3 +1,5 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 drop database if exists fitnessstudio;
 create database fitnessstudio;
 use fitnessstudio;
@@ -17,10 +19,7 @@ CREATE table client (
   client_feedback  varchar(300),
   
   primary key (client_id),
-  unique (client_email,client_mobile)
-  -- can be instructor relation ka foreign key addeed on inst side
-  -- foreign key added for signsup relation
-  
+  unique (client_email,client_mobile)  
 );
 
 CREATE TABLE admin 
@@ -33,7 +32,7 @@ CREATE TABLE admin
   admin_client_id  varchar(25),
   primary key (admin_id),
   unique (admin_email),
-  -- Foreign key is added for Can_be_adm relation
+ 
   foreign key (admin_client_id) references client(client_id) on delete set null on update cascade
 );
 
@@ -49,9 +48,8 @@ CREATE TABLE Fitness_seminar
   FS_time     time,
   primary key (FS_sem_id),
   unique ( FS_zoomlink),
-  -- adding foreign key for schedules
   foreign key (FS_admin_id) references admin(admin_id)  on delete cascade on update cascade
-  -- adding foreign key for conducts relationship
+  
 );
 
 CREATE TABLE Instructor (
@@ -105,8 +103,8 @@ create table advisor
 name varchar(20), 
 ID varchar(6) not null,
 email varchar(30),
-password varchar(65), -- password needs to be hashed/encrypted
-salary numeric(8,2), -- precision 8, scale 2 can represent 123456.78
+password varchar(65), -- password is hashed/encrypted
+salary numeric(8,2), -- precision 8, scale 2 
 jobType varchar(12),
 primary key (ID),
 unique(email)
@@ -165,7 +163,7 @@ on update cascade
 
 create table Lab_test( 
 test_id  varchar(6) not null,
-Test_name  varchar(8),
+Test_name  varchar(15),
 d_ID   varchar(6) not null,
 clientID varchar(6),
 primary key (test_id),
@@ -276,12 +274,8 @@ insert into advises values ('123461', '468799',0); -- dietitian
 insert into advises values ('123461', '778543',0); -- doctor
 insert into advises values ('123461', '832594',0); -- mental_coach
 
-
-
-
 insert into Lab_test values('121000','ECG',  '670046' ,'123457');
 insert into Lab_test values('122000','Lipid_Profile', '778543','123461' );
-
 
 insert into mental_coaching_plan values('1100', '832594', '123457',null);
 insert into mental_coaching_plan values('1300', '832594', '123461','Be fit');
@@ -289,15 +283,11 @@ insert into mental_coaching_plan values('1300', '832594', '123461','Be fit');
 insert into dietary_plan values ('11111','468799', '123457');
 insert into dietary_plan values ('11112', '468799', '123461');
 
--- list the macros for diet plan xy
 insert into plan_macronutrients values ('11111', 120, 250, 65);
 insert into plan_macronutrients values ('11112', 150, 350, 50);
 
 insert into plan_supplements values ('11111', 25, 100, 1500, 2000);
 insert into plan_supplements values ('11112', 25, 250, 1500, 1500);
-
-
-
 
 
 insert into Workouts values ('123456','A00001','Back and Legs 1');
