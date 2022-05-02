@@ -189,6 +189,7 @@ on update cascade
 create table mental_coaching_plan(
 M_C_plan_id  varchar(6) not null,
 M_C_ID    varchar(6) not null,
+M_C_comment varchar(50),
 clientID varchar(6),
 primary key (M_C_plan_id),
 foreign key (M_C_ID) references advisor(ID)
