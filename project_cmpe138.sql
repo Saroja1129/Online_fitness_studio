@@ -45,6 +45,8 @@ CREATE TABLE Fitness_seminar
   FS_admin_id varchar(25),
   FS_Inst_ID  varchar(6),
   FS_Name     varchar(24) not null,
+  FS_Date     date,
+  FS_time     time,
   primary key (FS_sem_id),
   unique ( FS_zoomlink),
   -- adding foreign key for schedules
@@ -231,10 +233,10 @@ INSERT into admin VALUES
 ('Jasmine_Wang','jasmine.wang@gmail.com','A23775',100000,'278c52d0ec5b6f6be8e010f1e0a7635468e9189aea96b8c28b9279369b108f8b','123460'); -- jasmine
 
 INSERT into Fitness_seminar VALUES
-('https://us02web.zoom.us/j/87562909621?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2356','live','A23675','A00001','Yoga Seminar'),
-('https://us02web.zoom.us/j/87562909641?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2378','recorded', 'A23795','A00002','Mental Health Seminar'),
-('https://us02web.zoom.us/j/87562909631?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2498','live', 'A23675','A00001','Diet Plan Seminar'),
-('https://us02web.zoom.us/j/87562909651?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS3765','recorded', 'A23675','A00002','Fitness Seminar');
+('https://us02web.zoom.us/j/87562909621?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2356','live','A23675','A00001','Yoga Seminar','2022-02-20','23:45:00'),
+('https://us02web.zoom.us/j/87562909641?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2378','recorded', 'A23795','A00002','Mental Health Seminar','2022-02-20','23:45:00'),
+('https://us02web.zoom.us/j/87562909631?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS2498','live', 'A23675','A00001','Diet Plan Seminar','2022-02-20','23:45:00'),
+('https://us02web.zoom.us/j/87562909651?pwd=RE5YNDIvM0RWRTkzZFd0eGxSQWQrZz09','FS3765','recorded', 'A23675','A00002','Fitness Seminar','2022-02-20','23:45:00');
 
 INSERT into Instructor VALUES 
 ('A00001','John Smith','28000','jsmith@555.net', 'e99b5787e29d2f8fbca7b4d4a9da8a4f7a50efe4133b9acc1b93ff887c9dc0ab', TRUE, TRUE, FALSE, NULL,0), -- jsmith 
@@ -277,8 +279,8 @@ insert into advises values ('123461', '832594',0); -- mental_coach
 
 
 
-insert into Lab_test values('121','Mona',  '670046' ,'123457');
-insert into Lab_test values('122','Diana', '778543','123461' );
+insert into Lab_test values('121000','ECG',  '670046' ,'123457');
+insert into Lab_test values('122000','Lipid_Profile', '778543','123461' );
 
 
 insert into mental_coaching_plan values('1100', '832594', '123457',null);
