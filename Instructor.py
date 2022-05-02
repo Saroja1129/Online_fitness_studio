@@ -93,8 +93,8 @@ def singleClientWP(client_id):
     conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
     cursor = conn.cursor()
     try:        
-        # Get workouts for client
-        query = "select * from Workouts where Client_ID = " + "'" +str(client_id) + "'"
+        # Get Workout for client
+        query = "select * from Workout where Client_ID = " + "'" +str(client_id) + "'"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         workouts = cursor.fetchall()
@@ -109,7 +109,7 @@ def singleClientWP(client_id):
         logging.error("Query not successful!")
 
 
-    #inst_id =workouts[0][3]
+    #inst_id =Workout[0][3]
     i = 0
 
     #Show workout details
@@ -162,10 +162,10 @@ def contactNew():
     conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
     cursor = conn.cursor()
     try:        
-        # Get all clients that don't have Workouts
+        # Get all clients that don't have Workout
         query = "select distinct client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-    client_email, client_mobile from client  where client_id not in (select Client_ID from Workouts)" 
-        # where client_id not in (select client_id from Workouts) <--- NEEDS TO BE PUT IN WHEN 
+    client_email, client_mobile from client  where client_id not in (select Client_ID from Workout)" 
+        # where client_id not in (select client_id from Workout) <--- NEEDS TO BE PUT IN WHEN 
         logging.info(query) # save operation in log file
         cursor.execute(query)
         clients = cursor.fetchall()
@@ -229,14 +229,14 @@ def contactClient(client_id, client_name, client_email, client_mobile):
 
 
 
-def deleteworkout(client_id, workouts, i, clientWP):
+def deleteworkout(client_id, Workout, i, clientWP):
     #Delete workout from Database
     conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
     cursor = conn.cursor()
     try:        
         # Delete workout
-        query = "delete from Workouts where Workouts.Client_ID\
-         = " + "'" +str(client_id) + "'" + "and Workouts.Workout =" + "'"+ str(workouts[i][2]) +"'"
+        query = "delete from Workout where Workout.Client_ID\
+         = " + "'" +str(client_id) + "'" + "and Workout.Workout =" + "'"+ str(Workout[i][2]) +"'"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         cursor.close()
@@ -284,7 +284,7 @@ def addtodb(clientWP, client_id,inst_id,inp):
     cursor = conn.cursor()
     try:        
         # Add workout to DB
-        query =  "Insert into Workouts values ('"+ str(client_id)+"',"+"'"+str(inst_id)+"','"+str(inp)+"');"
+        query =  "Insert into Workout values ('"+ str(client_id)+"',"+"'"+str(inst_id)+"','"+str(inp)+"');"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         cursor.close()
@@ -321,7 +321,7 @@ def client_list():
     cursor = conn.cursor()
     try:        
         # Get all clients for current instructor
-        query ="select distinct I.Name ,I.ID,C.client_name,B.Client_ID from Instructor as I join Workouts \
+        query ="select distinct I.Name ,I.ID,C.client_name,B.Client_ID from Instructor as I join Workout \
             as B on I.ID = B.Preparer_ID join client as C on C.client_id = B.Client_ID  where I.ID ="+ "'"+str(inst_id)+"'"   
         logging.info(query) # save operation in log file
         cursor.execute(query)
