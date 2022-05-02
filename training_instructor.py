@@ -71,20 +71,26 @@ def sessionsContent():
 
 
 #inst_email = "Isflwr@555.net"
-#inst_email = "kyra.forester@gmail.com"
-inst_email = "jsmith@555.net"
+inst_email = "kyra.forester@gmail.com"
+#inst_email = "jsmith@555.net"
 
 try:
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor()
 
-    cursor.execute("select Name,ID from Instructor where Email = '" + str(inst_email)+"'")
+    query = "select Name,ID from Instructor where Email = '" + str(inst_email)+"'"
+    cursor.execute(query)
     results=cursor.fetchall()
     instructor_name = results[0][0]
     instructor_id = results[0][1]
+    logging.info(query)
+    logging.info("Query was successful!")
 
-    cursor.execute("select * from training_session where session_instructor_id = '" + str(instructor_id)+"'")
+    query = "select * from training_session where session_instructor_id = '" + str(instructor_id)+"'"
+    cursor.execute(query)
     results=cursor.fetchall()
+    logging.info(query)
+    logging.info("Query was successful!")
 except mysql.Error as err:
      logging.error(err)
      logging.error("Query not successful!")
