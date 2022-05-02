@@ -210,9 +210,6 @@ session_zoom_link	varchar(100) not null,
 session_id	varchar(6) not null, 
 session_admin_id	varchar(6),
 session_instructor_id	varchar (6), 
-session_day varchar(20),
-session_time varchar(20),
-session_name varchar(40),
 primary key	(session_id),
 unique	(session_zoom_link),
 foreign key	(session_admin_id) references admin(admin_id) on delete cascade on update cascade,
@@ -332,12 +329,13 @@ insert into Workouts values ('123461','A00003','1','Whole Body 1');
 insert into Workouts values ('123461','A00003','1','Whole Body 2');
 
 
-insert into training_session values ('recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', 'A00010', 'MW', '10-11', 'Yoga');
-insert into training_session values ('live', 'group', 'http://www.zoom.com/120000', '120000', 'A23655', 'A00020', 'TTh', '14-15', 'Pilate');
-insert into training_session values ('recorded', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', 'A00030', 'F', '12-13', 'Zamba');
-insert into training_session values ('recorded', 'group', 'http://www.zoom.com/140000', '140000', 'A23675', 'A00050', 'Su', '15-16', 'Weights');
-insert into training_session values ('live', 'group', 'http://www.zoom.com/150000', '150000', 'A23775', 'A00050', 'S', '20-21', 'Cardio');
-insert into training_session values ('live', 'individual', 'http://www.zoom.com/160000', '160000', 'A23895', 'A00060', 'M', '8-9', 'Cycling');
+
+insert into training_session values ('recorded', 'group', 'http://www.zoom.com/110000', '110000', 'A23795', 'A00010');
+insert into training_session values ('live', 'group', 'http://www.zoom.com/120000', '120000', 'A23655', 'A00020');
+insert into training_session values ('recorded', 'individual', 'http://www.zoom.com/130000', '130000', 'A23735', 'A00030');
+insert into training_session values ('recorded', 'group', 'http://www.zoom.com/140000', '140000', 'A23675', 'A00050');
+insert into training_session values ('live', 'group', 'http://www.zoom.com/150000', '150000', 'A23775', 'A00050');
+insert into training_session values ('live', 'individual', 'http://www.zoom.com/160000', '160000', 'A23895', 'A00060');
 
 insert into training_session_client values ('110000', '123459');
 insert into training_session_client values ('120000', '123457');
