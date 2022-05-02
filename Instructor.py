@@ -152,16 +152,21 @@ def contactNew():
 
     #Fetch single client information
     newclientEval = tk.Tk()
-    newclientEval.title("New Clients")
+    newclientEval.title("Clients with no workout plan:")
     newclientEval.geometry("1200x900") 
 
+    # Create title within page
+    Label_New_Clients = tk.Label(newclientEval, text ="Clients with no workout plans:" )
+    Label_New_Clients.config(font=("Courier", 12))
+    Label_New_Clients.place(x = 10, y = 20)
 
     conn = mysql.connect(host="localhost", user=usr, passwd=pwd, database="fitnessstudio" )
     cursor = conn.cursor()
     try:        
         # Get all clients that don't have Workouts
         query = "select distinct client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-    client_email, client_mobile from client where client_id not in (select client_id from Workouts)" 
+    client_email, client_mobile from client  where client_id not in (select client_id from Workouts)" 
+        # where client_id not in (select client_id from Workouts) <--- NEEDS TO BE PUT IN WHEN 
         logging.info(query) # save operation in log file
         cursor.execute(query)
         clients = cursor.fetchall()
@@ -174,7 +179,8 @@ def contactNew():
         conn.rollback()
         logging.error(err)
         logging.error("Query not successful!")
-   
+    
+
     client_name  = clients[0][1]
     client_email = clients[0][7]
     client_mobile = clients[0][8]
@@ -359,10 +365,9 @@ def client_list():
         
     clientList.mainloop()
 
-def sess_list():
-    call([python_alias,"training_instructor.py","--input", usr, "--pw",pwd])
-
-'''  
+#def sess_list():
+#    call([python_alias,"training_instructor.py","--input", usr, "--pw",pwd])
+ 
 def sess_list():
 
     Sessions = tk.Tk()
@@ -405,24 +410,24 @@ def sess_list():
 
         createSessionButtonN.place(x = 1000, y = y2, width = 150) 
 
-        for j in range(1):
+        for j in range(3):
             e = Entry(Sessions,width=20, fg='blue')
             e.grid(row=i, column=j) 
-            e.insert(END, session[j])
+            e.insert(END, session[3-j])
             x1 = 10+j*120
             y1 = 50 +i*30
             e.place(x = x1 , y = y1)      
      
         i=i+1
     Sessions.mainloop()
-'''  
+ 
 
 
 def sessionInfo(session):
-    sess_ID = session[0]
-    sess_Link = session[1]
-    sess_Live = session[3]
-    sess_Ind = session[4]
+    sess_ID = session[5]
+    sess_Link = session[2]
+    sess_Live = session[0]
+    sess_Ind = session[1]
 
     # Pop out contaxt box with information
     sessZInfo = tk.Tk()
@@ -452,9 +457,9 @@ def sem_list():
     Seminars.geometry("1200x900") 
         
     # Create title within page
-    Label_Client = tk.Label(Seminars, text ="Fitness Seminars" )
-    Label_Client.config(font=("Courier", 12))
-    Label_Client.place(x = 10, y = 20)
+    Label_Seminars = tk.Label(Seminars, text ="Fitness Seminars" )
+    Label_Seminars.config(font=("Courier", 12))
+    Label_Seminars.place(x = 10, y = 20)
 
     
     # Query seminars
