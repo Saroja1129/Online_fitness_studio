@@ -1,3 +1,5 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 # import tkinter related libraries
 import tkinter as tk
 import mysql.connector as mysql
