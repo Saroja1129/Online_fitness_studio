@@ -1,3 +1,4 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
@@ -6,6 +7,17 @@ from tkinter import *
 from subprocess import call
 from PIL import *
 import argparse
+import logging
+
+# Create log file
+log_file = 'clientLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level,handlers=[log_fh])
+
 
 #pass current user informations
  
@@ -17,6 +29,7 @@ args = parser.parse_args()
 user = args.input
 #user="name1.last@gmail.com"
 python_alias=args.alias
+#python_alias='python'
 local_DB_password = args.pw
 #local_DB_password = "um41Tact$"
 
@@ -26,14 +39,22 @@ def train_sessions(kind):
     Rec_tra_sessions = tk.Tk()
     Rec_tra_sessions .title(kind+" Training Sessions")
     Rec_tra_sessions .geometry("1300x900") 
+    
     my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
-    query = ("select session_instructor_name,session_invididual_group,session_id,\
-    session_zoom_link from training_session where session_type=" + "'" + str(kind) +"'" )
-                                                               
-    connection.execute(query)
+    try:
+        #displays training sessions
+        query = ("select session_instructor_name,session_invididual_group,session_id,\
+        session_zoom_link from training_session where session_type=" + "'" + str(kind) +"'" )
+        logging.info(query) # save operation in log file
+        connection.execute(query)
+        myresult = connection.fetchall()
+        logging.info("Query was successful!")  
+        
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
 
-    myresult = connection.fetchall()
     #print(myresult)
     # Create title within page
     Label_Client = tk.Label(Rec_tra_sessions, text =kind+" Training Sessions" )
@@ -73,12 +94,19 @@ def fitness_seminars(kind):
     Rec_fitness_seminars .geometry("1300x900") 
     my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
-    query = "select FS_sem_id,FS_Inst_ID, FS_zoomlink\
-    from Fitness_seminar where FS_type =" + "'" + str(kind) +"'" 
-
-    connection.execute(query)
-
-    myresult = connection.fetchall()
+    try:
+        #displays fitness seminars
+        query = "select FS_sem_id,FS_Inst_ID, FS_zoomlink\
+        from Fitness_seminar where FS_type =" + "'" + str(kind) +"'" 
+        logging.info(query) # save operation in log file
+        connection.execute(query)
+        myresult = connection.fetchall()
+        logging.info("Query was successful!")
+        
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+    
     #print(myresult)
     # Create title within page
     Label_Client = tk.Label(Rec_fitness_seminars, text =kind+" Fitness Seminars" )
@@ -111,35 +139,71 @@ def Advisor_Request():
     #user="name1.last@gmail.com"
     con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
     cursor=con.cursor()
-    cursor.execute("select client_id from client where client_email = %s", [(user)] )
-    results=cursor.fetchall()
+    try:
+        #retreive client id for the corressponding client email
+        query="select client_id from client where client_email = %s"
+        logging.info(query) # save operation in log file
+        cursor.execute(query, [(user)])
+        results = cursor.fetchall()
+        logging.info("Query was successful!")
+        
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+        
     #print(results)
     l=len(results)
     S = str(results[l-1]) 
     e = int(S[2:8]) 
     #print(e)
     a=Adv_type.get()
+    print(a)
     con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
     cursor=con.cursor()
-    cursor.execute("select max(id) from advisor where jobType = %s", [(a)] )
-    results1=cursor.fetchall()
-    #print(results1)
+    try:
+        #selecting advisor for a particular jobtype
+        query="select max(id) from advisor where jobType = %s"
+        logging.info(query)
+        cursor.execute(query, [(a)])
+        results1 = cursor.fetchall()
+        logging.info("Query was successful!")
+        
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+        
+    print(results1)
     l=len(results1)
     S = str(results1[l-1]) 
     f = int(S[2:8]) 
     #print(f)
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio") 
     cursor=con.cursor()
-    cursor.execute("insert into advises (clientID,advID) values(%s,%s)",
-                   [(e),(f)])
-    con.commit()
-    msgbox.showinfo("Login status","ADVISOR REQUESTED SUCCESSFULLY")
+    try:
+        #inerting into advises table
+        query="insert into advises (clientID,advID) values(%s,%s)"
+        logging.info(query)
+        cursor.execute(query,[(e),(f)])
+        con.commit()
+        logging.info("Query was successful!")
+        msgbox.showinfo("Login status","ADVISOR REQUESTED SUCCESSFULLY")
+        
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+        
+        
+    #cursor.execute("insert into advises (clientID,advID) values(%s,%s)",
+    #              [(e),(f)])
+    #con.commit()
+    #msgbox.showinfo("Login status","ADVISOR REQUESTED SUCCESSFULLY")
     #Client.destroy()
     #call([python_alias,"test.py","--input", user, "--pw", local_DB_password,"--Job",a])
     #call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
     
 def Advisor_access():
     a=Adv_type.get()
+    print(a)
     Client.destroy()
     call([python_alias,"Client_advisor_display.py","--input", user, "--pw",local_DB_password,"--alias", python_alias,"--Job",a,])
     print("Hello")
