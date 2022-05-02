@@ -292,8 +292,8 @@ insert into Lab_test values('121','Mona',  '670046' ,'123457');
 insert into Lab_test values('122','Diana', '778543','123461' );
 
 
-insert into mental_coaching_plan values('1100', '832594', '123457');
-insert into mental_coaching_plan values('1300', '832594', '123461');
+insert into mental_coaching_plan values('1100', '832594', '123457',null);
+insert into mental_coaching_plan values('1300', '832594', '123461','Be fit');
 
 insert into dietary_plan values ('11111','468799', '123457');
 insert into dietary_plan values ('11112', '468799', '123461');
