@@ -1,9 +1,12 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
 import argparse
+import logging
 
 
 # pass current user information
@@ -16,17 +19,39 @@ user = args.input
 local_DB_Password = args.pw
 python_alias= args.alias
 
+# Create log file
+log_file = 'adminLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
+
+
+
 def changed():
     a=Mem_level.get()
     b=Mem_cost.get() 
-    print(a)
-    print(b)
+   # print(a)
+    #print(b)
     try:
         m = mysql.connect(host="localhost", user="root", passwd=local_DB_Password, database="fitnessstudio" )
         connection = m.cursor()
-        connection.execute("update membership set mem_cost=%s where mem_level=%s",[b,a])
-        myresult = connection.fetchall()
-        m.commit()
+        try:
+            query="update membership set mem_cost=%s where mem_level=%s"
+            logging.info(query) # save operation in log file
+            connection.execute(query,[b,a])
+            myresult = connection.fetchall()
+            m.commit()
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+            
+  
         msgbox.showinfo("Error Status","Updation done") 
     except:
         msgbox.showinfo("Error Status","Not done") 

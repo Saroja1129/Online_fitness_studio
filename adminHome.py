@@ -1,9 +1,12 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
 import argparse
+import logging
 
 # pass current user information
 parser = argparse.ArgumentParser()
@@ -14,6 +17,18 @@ args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
 python_alias= args.alias
+
+
+
+# Create log file
+log_file = 'adminLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
    
 
 
@@ -23,9 +38,17 @@ def Fetch_Training_session():
     Admin2.geometry("1300x900") 
     my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
     connection = my_connect.cursor()
-    query = "select * from training_session"
 
-    connection.execute(query)
+		
+    try:              
+        query = "select * from training_session" 
+        logging.info(query) # save operation in log file
+        connection.execute(query)
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")	
 
     myresult = connection.fetchall()
         
@@ -84,8 +107,18 @@ Admin_home.geometry("800x600")
 
 my_connect = mysql.connect(host="localhost", user="root", passwd=local_DB_password, database="fitnessstudio" )
 connection = my_connect.cursor()
-query = "select admin_name from admin where admin_Email = " +  "'" + str(user) + "'"
-connection.execute(query)
+
+try:              
+	query = "select admin_name from admin where admin_Email = " +  "'" + str(user) + "'"
+	logging.info(query) # save operation in log file
+	connection.execute(query)
+	logging.info("Query was successful!")
+
+except mysql.Error as err:
+	logging.error(err)
+	logging.error("Query not successful!")
+		
+
 results=connection.fetchall()
 a=results[0][0]
 

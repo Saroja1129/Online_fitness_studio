@@ -1,3 +1,5 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 import tkinter as tk
 from tkinter.font import BOLD
 import mysql.connector as mysql
@@ -5,6 +7,7 @@ import tkinter.messagebox as msgbox
 from tkinter import *
 from subprocess import call
 import argparse
+import logging
 
 # pass current user information
 parser = argparse.ArgumentParser()
@@ -16,6 +19,16 @@ user = args.input
 local_DB_password = args.pw
 python_alias= args.alias
 
+# Create log file
+log_file = 'adminLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
+
 
      
 def Client_Trainingsessions(client_id):
@@ -25,8 +38,7 @@ def Client_Trainingsessions(client_id):
         con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
         cursor=con.cursor()
         movieList = []
-        try:
-          # cursor.execute("select distinct client_id from client")
+        try:# cursor.execute("select distinct client_id from client")
           # results = cursor.fetchall()
           # for a in results:
           #  data =  (a[0])
@@ -35,10 +47,19 @@ def Client_Trainingsessions(client_id):
           # selected2.set(movieList[0])
           # options=movieList 
           # dropdown = OptionMenu(Tran_ses, selected2 ,*options )
-          # dropdown.place(x = 350, y = 540, width = 200) 
-            query = "select ID from advisor where email = " +  "'" + str(user) + "'"  +""
-            cursor.execute(query)
-            userID = connection.fetchall()
+          # dropdown.place(x = 350, y = 540, width = 200)                   
+            try:
+                query = "select ID from advisor where email = " +  "'" + str(user) + "'"  +""
+                logging.info(query) # save operation in log file
+                cursor.execute(query)
+                logging.info("Query was successful!")
+            except mysql.Error as err:
+                logging.error(err)
+                logging.error("Query not successful!")	
+        
+            
+
+            userID = cursor.fetchall()
             selected2 = userID[0][0]
         
         except:
@@ -51,8 +72,17 @@ def Client_Trainingsessions(client_id):
       cursor=con.cursor()
       movieList = []
       try:
-        query="select distinct trainer_id from instructor where oneflag = true"
-        cursor.execute(query)
+      
+        try:              
+            query="select distinct Trainer_id from Instructor where oneflag = true"
+            logging.info(query) # save operation in log file
+            cursor.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+
         results = cursor.fetchall()
         for a in results:
           data =  (a[0])
@@ -74,8 +104,17 @@ def Client_Trainingsessions(client_id):
       cursor=con.cursor()
       movieList = []
       try:
-        query="select distinct admin_id from admin"
-        cursor.execute(query)
+      
+        try:              
+            query="select distinct admin_id from admin"
+            logging.info(query) # save operation in log file
+            cursor.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+
         results = cursor.fetchall()
         for a in results:
            data =  (a[0])
@@ -110,8 +149,17 @@ def Client_Trainingsessions(client_id):
  
         con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
         cursor=con.cursor() 
-        query="select session_id from training_session order by session_id"
-        cursor.execute(query)
+        try:              
+            query="select session_id from training_session order by session_id"
+            logging.info(query) # save operation in log file
+            cursor.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+
+        
         results = cursor.fetchall()
         l=len(results)
         S = str(results[l-1]) 
@@ -127,28 +175,49 @@ def Client_Trainingsessions(client_id):
         f=selected1.get() #inst_id
         g=selected2.get()#client_id
     
-        print(a)
-        print(b)
-        print(c)
-        print(d)
-        print(e)
-        print(f)
-        print(g)
+        #print(a)
+        #print(b)
+        #print(c)
+        #print(d)
+        #print(e)
+        #print(f)
+        #print(g)
     
         try:
             con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
             cursor=con.cursor()
-            print("insert into training_session values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
+            #print("insert into training_session values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
             #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
-            cursor.execute("insert into training_session values(%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
-            con.commit()
+            
+            try:              
+                query="insert into training_session values(%s,%s,%s,%s,%s,%s)"
+                logging.info(query) # save operation in log file
+                cursor.execute(query, [a,b,c,d,e,f])
+                con.commit()
+                logging.info("Query was successful!")
+
+            except mysql.Error as err:
+                logging.error(err)
+                logging.error("Query not successful!")
+
+            
             results=cursor.fetchall()
             
             con1=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
             cursor1=con1.cursor()
-            print("insert into training_session_client values(%s,%s)",[d,client_id])
-            cursor1.execute("insert into training_session_client values(%s,%s)",[d,client_id])
-            con1.commit()
+            #print("insert into training_session_client values(%s,%s)",[d,client_id])
+            
+            try:              
+                query="insert into training_session_client values(%s,%s)"
+                logging.info(query) # save operation in log file
+                cursor1.execute(query, [d,client_id])
+                con1.commit()
+                logging.info("Query was successful!")
+            except mysql.Error as err:
+                logging.error(err)
+                logging.error("Query not successful!")
+
+            
             results1=cursor.fetchall()
             
           
@@ -227,12 +296,20 @@ def getSingleClient(i):
 
 
     # Get single client for current advisor
-    query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
-    client_email, client_mobile \
-    from client \
-    where client_id = " +  "'" + str(client_id) + "'" + ""
+    
+    try:              
+        query = "select client_id, client_name , client_age, client_gender, client_height, client_weight, client_bmi, \
+        client_email, client_mobile \
+        from client \
+        where client_id = " +  "'" + str(client_id) + "'" + ""
+        logging.info(query) # save operation in log file
+        connection.execute(query)
+        logging.info("Query was successful!")
 
-    connection.execute(query)
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")	
+
     
     createDietPlanButton = tk.Button(Singleclient, text ="Create Training session",bg ='blue', command=lambda:Client_Trainingsessions(client_id)) 
     createDietPlanButton.place(x = 150, y = 220, width = 200)
@@ -275,11 +352,21 @@ connection = my_connect.cursor()
 # userID = userID[0][0]
 
 client_id = StringVar()
+
+
+try:              
 # Get all clients from current advisor, check if clients fulfill the membership Premium
-query = "select client_id, client_name , client_age, client_gender, client_height,client_email, \
-          client_mobile,mem_level from client join membership on client_id=mem_client_id"
-    
-connection.execute(query)
+    query = "select client_id, client_name , client_age, client_gender, client_height,client_email, \
+      client_mobile,mem_level from client join membership on client_id=mem_client_id"
+    logging.info(query) # save operation in log file
+    connection.execute(query)
+    logging.info("Query was successful!")
+
+except mysql.Error as err:
+	logging.error(err)
+	logging.error("Query not successful!")
+
+ 
 
 myresult = connection.fetchall()
 

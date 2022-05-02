@@ -1,16 +1,32 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
-
+import logging
 
 from tkinter import *
 from subprocess import call
 from hashlib import pbkdf2_hmac # for hash function
 from PIL import *
 
+
 #Change here for your local DB password
 local_DB_password = "password"
 python_alias = "python3"
+
+import logging
+
+# Create log file
+log_file = 'adminLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
+    
 
 
 def Register():
@@ -45,7 +61,17 @@ def submitact():
      
         con=mysql.connect(host="localhost",user="root",password=local_DB_password, db="fitnessstudio") 
         cursor=con.cursor()
-        cursor.execute("select * from admin where admin_email = %s and admin_pwd=%s", [(user),(passw)] )
+        try:              
+            query = "select * from admin where admin_email = %s and admin_pwd=%s" 
+            logging.info(query) # save operation in log file
+            cursor.execute(query, [(user),(passw)])
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+            
+       # cursor.execute()
         results=cursor.fetchall()
         if results:
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
@@ -60,8 +86,19 @@ def submitact():
             # Update user and password
         con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
-        cursor.execute("select * from client where client_email = %s and client_pwd =%s", [(user),(passw)] )
+        
+        try:              
+            query = "select * from client where client_email = %s and client_pwd =%s"
+            logging.info(query) # save operation in log file
+            cursor.execute(query, [(user),(passw)])
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+            
         results=cursor.fetchall()
+        
         if results:
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
             Admin.destroy()
@@ -76,7 +113,19 @@ def submitact():
             # Update user and password
         con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
         cursor=con.cursor()
-        cursor.execute("select * from advisor where email = %s and password =%s", [(user),(passw)] )
+        
+        
+        try:              
+            query = "select * from advisor where email = %s and password =%s"
+            logging.info(query) # save operation in log file
+            cursor.execute(query, [(user),(passw)])
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+        
+        
         results=cursor.fetchall()
         if results:
             msgbox.showinfo("Login status","lOGIN SUCCESSFULL")
@@ -92,7 +141,18 @@ def submitact():
              # Update user and password
          con=mysql.connect(host="localhost",user="root",password = local_DB_password,db="fitnessstudio") 
          cursor=con.cursor()
-         cursor.execute("select * from Instructor where email = %s and Password =%s", [(user),(passw)] )
+         
+         try:              
+            query = "select * from Instructor where email = %s and Password =%s"
+            logging.info(query) # save operation in log file
+            cursor.execute(query, [(user),(passw)])
+            logging.info("Query was successful!")
+
+         except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
+         
+
          results=cursor.fetchall()
          if results:
              msgbox.showinfo("Login status","lOGIN SUCCESSFULL")

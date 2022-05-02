@@ -1,6 +1,9 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
+import logging
 
 from tkinter import *
 from subprocess import call
@@ -17,6 +20,17 @@ args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
 python_alias= args.alias
+
+
+# Create log file
+log_file = 'adminLog.txt'
+log_fh = logging.FileHandler(log_file)
+
+log_format = '%(asctime)s %(levelname)s: %(message)s'
+# Possible levels: DEBUG, INFO, WARNING, ERROR, CRITICAL    
+log_level = 'INFO' 
+logging.basicConfig(format=log_format, level=log_level, 
+    handlers=[log_fh])
    
 
 
@@ -46,16 +60,25 @@ def getinstructor():
     cursor=con.cursor()
     movieList = []
     try:
-      cursor.execute("select distinct Trainer_id from Instructor where semflag = true")
-      results = cursor.fetchall()
-      for a in results:
-        data =  (a[0])
-        movieList.append(data)
+        try:              
+            query = "select distinct Trainer_id from Instructor where semflag = true" 
+            logging.info(query) # save operation in log file
+            cursor.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
             
-      selected1.set(movieList[0])
-      options=movieList 
-      dropdown = OptionMenu(Tran_ses, selected1 ,*options )
-      dropdown.place(x = 350 ,y = 400, width = 200) 
+        results = cursor.fetchall()
+        for a in results:
+        	data =  (a[0])
+        	movieList.append(data)
+            
+        selected1.set(movieList[0])
+        options=movieList
+        dropdown = OptionMenu(Tran_ses, selected1 ,*options )
+        dropdown.place(x = 350 ,y = 400, width = 200) 
         
     except:
        print("Error: unable to fecth data")
@@ -68,16 +91,25 @@ def getadmin():
     cursor=con.cursor()
     movieList = []
     try:
-      cursor.execute("select distinct admin_id from admin")
-      results = cursor.fetchall()
-      for a in results:
-        data =  (a[0])
-        movieList.append(data)
+        try:              
+            query = "select distinct admin_id from admin"
+            logging.info(query) # save operation in log file
+            cursor.execute(query)
+            logging.info("Query was successful!")
+
+        except mysql.Error as err:
+            logging.error(err)
+            logging.error("Query not successful!")
             
-      selected.set(movieList[0])
-      options=movieList 
-      dropdown = OptionMenu(Tran_ses, selected ,*options )
-      dropdown.place(x = 350, y = 300, width = 200) 
+        results = cursor.fetchall()
+        for a in results:
+        	data =  (a[0])
+        	movieList.append(data)
+            
+        selected.set(movieList[0])
+        options=movieList
+        dropdown = OptionMenu(Tran_ses, selected ,*options )
+        dropdown.place(x = 350 ,y = 300, width = 200) 
         
     except:
        print("Error: unable to fecth data") 
@@ -87,7 +119,18 @@ def submitact():
     
     con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
     cursor=con.cursor() 
-    cursor.execute("select session_id from training_session order by session_id")
+    
+    try:              
+        query = "select session_id from training_session order by session_id"
+        logging.info(query) # save operation in log file
+        cursor.execute(query)
+        logging.info("Query was successful!")
+
+    except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+    
+
     results = cursor.fetchall()
     l=len(results)
     S = str(results[l-1]) 
@@ -100,20 +143,30 @@ def submitact():
     c=zoomlink.get()
 
  
-    print(a)
-    print(b)
-    print(c)
-    print(d)
-    print(e)
-    print(f)
+   # print(a)
+    #print(b)
+    #print(c)
+    #print(d)
+    #print(e)
+    #print(f)
 
     try:
       con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
       cursor=con.cursor()
-      print("insert into training_session values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
+      #print("insert into training_session values(%s,%s,%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
       #cursor.execute("insert into fitness_seminar(FS_zoomlink,FS_sem_id,FS_type,FS_admin_id,FS_Inst_ID) values('a','a','a','A23675','A00001');,[(a),(b),(c),])
-      cursor.execute("insert into training_session values(%s,%s,%s,%s,%s,%s)",[a,b,c,d,e,f])
-      con.commit()
+      try:              
+        query = "insert into training_session values(%s,%s,%s,%s,%s,%s)"
+        logging.info(query) # save operation in log file
+        cursor.execute(query, [a,b,c,d,e,f])
+        con.commit()
+        logging.info("Query was successful!")
+      except mysql.Error as err:
+        logging.error(err)
+        logging.error("Query not successful!")
+        
+   
+      
       results=cursor.fetchall()
       msgbox.showinfo("Create status","Training_session creation succesfull")
     except:
