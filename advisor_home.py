@@ -1,3 +1,4 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
@@ -13,6 +14,7 @@ parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
+python_alias=args.alias
 
 
 

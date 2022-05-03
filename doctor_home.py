@@ -1,3 +1,5 @@
+# SJSU CMPE 138 Spring 2022 TEAM5
+
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
@@ -83,7 +85,7 @@ def createPrescription(client_id):
         cursor.execute("select test_id from Lab_test")
         results = cursor.fetchall()
         a=len(results)
-        print(results[a-1])
+       # print(results[a-1])
         S = str(results[a-1]) 
         a= str(int(S[2:8])+1)
       
@@ -94,13 +96,13 @@ def createPrescription(client_id):
         try:
             con=mysql.connect(host="localhost",user="root",password=local_DB_password,db="fitnessstudio")
             cursor=con.cursor()
-            print("insert into Lab_test values(%s,%s,%s,%s)",[a,b,c,d])
+            #print("insert into Lab_test values(%s,%s,%s,%s)",[a,b,c,d])
             cursor.execute("insert into Lab_test values(%s,%s,%s,%s)",[(a),(b),(c),(d)])
             con.commit()
             results=cursor.fetchall()
             msgbox.showinfo("Create status","Prescription added succesfully")
         except:
-            print("Error: unable to create")
+           # print("Error: unable to create")
             msgbox.showinfo("Create status","Prescription added unsuccesfull")
       
     B=tk.Tk()
