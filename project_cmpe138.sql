@@ -72,9 +72,9 @@ CREATE TABLE Instructor (
 CREATE TABLE Workout (
     Client_ID varchar(6),
     Preparer_ID varchar(6),
-    Workout varchar(50), 
+    Workout_name varchar(50), 
     -- reference to a particular program
-    primary key (Client_ID, Preparer_ID, Workout),
+    primary key (Client_ID, Preparer_ID, Workout_name),
     foreign key (Preparer_ID) references Instructor(ID) on delete cascade on update cascade,
     -- FK to instructor ID as typical for multi-valued attr.
     foreign key (Client_ID) references client (client_id) on delete cascade on update cascade
@@ -88,6 +88,7 @@ CREATE TABLE membership
  (
   mem_client_id    varchar(25),
   mem_level        varchar(25) not null,
+
   mem_cost         integer not null,
   mem_admin_id     varchar(25),
  
