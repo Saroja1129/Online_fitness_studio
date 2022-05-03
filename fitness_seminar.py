@@ -80,7 +80,7 @@ def getinstructor():
     cursor=con.cursor()
     movieList = []
     try:
-      cursor.execute("select distinct Trainer_id from Instructor where semflag = true")
+      cursor.execute("select distinct id from Instructor where semflag = true")
       results = cursor.fetchall()
       for a in results:
         data =  (a[0])
