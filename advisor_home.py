@@ -1,5 +1,3 @@
-# SJSU CMPE 138 Spring 2022 TEAM5
-
 import tkinter as tk
 import mysql.connector as mysql
 import tkinter.messagebox as msgbox
@@ -16,8 +14,15 @@ args = parser.parse_args()
 user = args.input
 local_DB_password = args.pw
 
-python_alias = args.alias
+
+
+# python_alias = args.alias
   
+def DoctorclientList():
+    
+    Advisor_home.destroy()
+    #call client home_page instead of admin
+    call([python_alias,"doctor_home.py","--input", user, "--pw", local_DB_password])
 
 
 # Get complete client list on dietitian home page
@@ -39,6 +44,11 @@ Advisor_home.geometry("900x900")
 showClients = tk.Button(Advisor_home, text ="Show My Clients",
                       bg ='blue', command=dietClientList)
 showClients.place(x = 150, y = 140, width = 200)
+
+showClients = tk.Button(Advisor_home, text ="Show Doctor Clients",
+                      bg ='blue', command=DoctorclientList)
+showClients.place(x = 150, y = 240, width = 200)
+
 
 
 
