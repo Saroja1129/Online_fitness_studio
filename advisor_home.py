@@ -19,6 +19,10 @@ python_alias=args.alias
 
 
 # python_alias = args.alias
+def MentalclientList():
+    Advisor_home.destroy()
+    #call client home_page instead of admin
+    call([python_alias,"mental_coaching_plan.py","--input", user, "--pw", local_DB_password])
   
 def DoctorclientList():
     
@@ -51,6 +55,9 @@ showClients = tk.Button(Advisor_home, text ="Show Doctor Clients",
                       bg ='blue', command=DoctorclientList)
 showClients.place(x = 150, y = 240, width = 200)
 
+showClients = tk.Button(Advisor_home, text ="Show Mental coach Clients",
+                      bg ='blue', command=MentalclientList)
+showClients.place(x = 150, y = 340, width = 200)
 
 
 
