@@ -61,7 +61,7 @@ def getinstructor():
     movieList = []
     try:
         try:              
-            query = "select distinct Trainer_id from Instructor where groupflag = true" 
+            query = "select distinct id from Instructor where groupflag = true" 
             logging.info(query) # save operation in log file
             cursor.execute(query)
             logging.info("Query was successful!")
@@ -224,7 +224,7 @@ inst.place(x = 350, y = 360, width = 200)
 # client = tk.Button(Tran_ses, text ="Select client", bg ='white',command =getclient)
 # client.place(x = 350, y = 500, width = 200)
 
-submitbtn = tk.Button(Tran_ses, text ="CREATE_SEMINAR", bg ='blue',command =submitact)
+submitbtn = tk.Button(Tran_ses, text ="CREATE_SESSION", bg ='blue',command =submitact)
 submitbtn.place(x = 350, y = 500, width = 150)
 
 
