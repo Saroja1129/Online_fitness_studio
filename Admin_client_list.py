@@ -74,7 +74,7 @@ def Client_Trainingsessions(client_id):
       try:
       
         try:              
-            query="select distinct Trainer_id from Instructor where oneflag = true"
+            query="select distinct id from Instructor where oneflag = true"
             logging.info(query) # save operation in log file
             cursor.execute(query)
             logging.info("Query was successful!")
@@ -221,10 +221,10 @@ def Client_Trainingsessions(client_id):
             results1=cursor.fetchall()
             
           
-            msgbox.showinfo("Create status","Fitness_seminar creation succesfull")
+            msgbox.showinfo("Create status","Session creation succesfull")
         except:
             print("Error: unable to create")
-            msgbox.showinfo("Create status","Fitness_seminar creation unsuccesfull")
+            msgbox.showinfo("Create status","Session creation unsuccesfull")
 
     
 
@@ -279,7 +279,7 @@ def Client_Trainingsessions(client_id):
     # client = tk.Button(Tran_ses, text ="Select client", bg ='white',command =getclient)
     # client.place(x = 350, y = 500, width = 200)
 
-    submitbtn = tk.Button(Tran_ses, text ="CREATE_SEMINAR", bg ='blue',command =submitact)
+    submitbtn = tk.Button(Tran_ses, text ="CREATE_SESSION", bg ='blue',command =submitact)
     submitbtn.place(x = 350, y = 500, width = 150)
 
     Tran_ses.mainloop()
