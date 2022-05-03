@@ -236,7 +236,7 @@ def deleteworkout(client_id, Workout, i, clientWP):
     try:        
         # Delete workout
         query = "delete from Workout where Workout.Client_ID\
-         = " + "'" +str(client_id) + "'" + "and Workout.Workout =" + "'"+ str(Workout[i][2]) +"'"
+         = " + "'" +str(client_id) + "'" + "and Workout.Workout_name =" + "'"+ str(Workout[i][2]) +"'"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         cursor.close()
