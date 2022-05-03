@@ -94,7 +94,7 @@ def singleClientWP(client_id):
     cursor = conn.cursor()
     try:        
         # Get Workout for client
-        query = "select * from Workout where Client_ID = " + "'" +str(client_id) + "'"
+        query = "select * from Workout where Client_ID = " + "'" +str(client_id) + "' and Preparer_ID = '" +str(inst_id) + "'" 
         logging.info(query) # save operation in log file
         cursor.execute(query)
         workouts = cursor.fetchall()
@@ -236,7 +236,8 @@ def deleteworkout(client_id, Workout, i, clientWP):
     try:        
         # Delete workout
         query = "delete from Workout where Workout.Client_ID\
-         = " + "'" +str(client_id) + "'" + "and Workout.Workout_name =" + "'"+ str(Workout[i][2]) +"'"
+         = " + "'" +str(client_id) + "'" + "and Workout.Workout_name =" + "'"+ str(Workout[i][2]) +"'" +" and\
+        Workout.Preparer_ID = " +"'"+ str(inst_id) +"'"
         logging.info(query) # save operation in log file
         cursor.execute(query)
         cursor.close()
@@ -482,12 +483,12 @@ def sem_list():
     for seminar in seminars: 
         
         #Create underlying buttons for the name of clients
-        seminarInfoButton = tk.Button(Seminars, text =" Seminar Info ",
+        seminarInfoButton = tk.Button(Seminars, text ="Info ",
                           bg ='white', borderwidth = 0, command=lambda i=i :Semzoom(seminars[i]))
         y1 = 50
         y2 = y1+i*30
 
-        seminarInfoButton.place(x = 1000, y = y2, width = 150) 
+        seminarInfoButton.place(x = 1060, y = y2, width = 150) 
 
         for j in range(1,len(seminar)-1):
             e = Entry(Seminars,width=30, fg='blue')
