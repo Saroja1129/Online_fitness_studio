@@ -230,7 +230,7 @@ l=len(results)
 #print(l)
 S = str(results[l-1]) 
 b= S[2]
-#print(b)
+print(b)
 
 if(b=='F'):
     Type="Free"
@@ -306,9 +306,10 @@ elif(Type=="Basic"):
     #submitbtn3.place(x = 50, y = 150, width = 200)
     
     #access to recorded fitness seminars page
+    kind='live'
     num4 = tk.Label(Client, text ="3.", font=('bold',20) )
     num4.place(x = 30, y = 150)
-    submitbtn4 = tk.Button(Client, text ="Enroll to "+kind+"  Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='live'))
+    submitbtn4 = tk.Button(Client, text =kind+"  Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='live'))
     submitbtn4.place(x = 50, y = 150, width = 200)
     
     #more stuff
@@ -337,6 +338,7 @@ elif(Type=="Premium"):
     submitbtn1.place(x = 50, y = 90, width = 200)
     
     #access to recorded fitness seminars page
+    kind='recorded'
     num2 = tk.Label(Client, text ="2.", font=('bold',20) )
     num2.place(x = 30, y = 120)
     submitbtn2 = tk.Button(Client, text =kind+" Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='recorded'))
@@ -351,9 +353,10 @@ elif(Type=="Premium"):
     #submitbtn3.place(x = 50, y = 150, width = 200)
     
     #access to recorded fitness seminars page
+    kind='live'
     num4 = tk.Label(Client, text ="3.", font=('bold',20) )
     num4.place(x = 30, y = 150)
-    submitbtn4 = tk.Button(Client, text ="Enroll to "+kind+"  Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='live'))
+    submitbtn4 = tk.Button(Client, text =kind+"  Fitness Seminars",bg ='silver', command=lambda:fitness_seminars(kind='live'))
     submitbtn4.place(x = 50, y = 150, width = 200)
     
     Output_more_stuff = tk.Label(Client, text ="As a Premium user you can request for an Advisor:", font=('bold',20) )

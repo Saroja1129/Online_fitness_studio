@@ -20,13 +20,13 @@ python_alias=args.alias
 
 # python_alias = args.alias
 def MentalclientList():
-    Advisor_home.destroy()
+    #Advisor_home.destroy()
     #call client home_page instead of admin
     call([python_alias,"mental_coaching_plan.py","--input", user, "--pw", local_DB_password])
   
 def DoctorclientList():
     
-    Advisor_home.destroy()
+    #Advisor_home.destroy()
     #call client home_page instead of admin
     call([python_alias,"doctor_home.py","--input", user, "--pw", local_DB_password])
 
@@ -34,7 +34,7 @@ def DoctorclientList():
 # Get complete client list on dietitian home page
 def dietClientList():
 
-    Advisor_home.destroy()
+    #Advisor_home.destroy()
     #call client home_page instead of admin
     call([python_alias,"dietitian_home.py","--input", user, "--pw", local_DB_password])
 

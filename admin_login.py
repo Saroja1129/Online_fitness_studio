@@ -12,8 +12,8 @@ from PIL import *
 
 
 #Change here for your local DB password
-local_DB_password = "password"
-python_alias = "python3"
+local_DB_password = "um41Tact$"
+python_alias = "python"
 
 import logging
 

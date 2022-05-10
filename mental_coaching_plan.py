@@ -32,7 +32,7 @@ def viewcomment(client_id):
     i=0 
     for client in results: 
         for j in range(len(client)):
-            e = Entry(Comment, width=10, fg='Magenta') 
+            e = Entry(Comment, width=10, fg='blue') 
             e.grid(row=i, column=j) 
             e.insert(END, client[j])
     i=i+1
@@ -61,7 +61,7 @@ def GiveComment(client_id):
         cursor.execute("select M_C_plan_id from mental_coaching_plan")
         results = cursor.fetchall()
         a=len(results)
-        print(results[a-1])
+        #print(results[a-1])
         S = str(results[a-1]) 
         a= str(int(S[2:6])+1)
       
@@ -72,7 +72,7 @@ def GiveComment(client_id):
         try:
             con=mysql.connect(host="localhost",user="root",password=local_dB_password,db="fitnessstudio")
             cursor=con.cursor()
-            print("insert into mental_coaching_plan values(%s,%s,%s,%s)",[a,b,c,d])
+            #print("insert into mental_coaching_plan values(%s,%s,%s,%s)",[a,b,c,d])
             cursor.execute("insert into mental_coaching_plan values(%s,%s,%s,%s)",[(a),(b),(c),(d)])
             con.commit()
             results=cursor.fetchall()
@@ -81,20 +81,20 @@ def GiveComment(client_id):
             print("Error: unable to create")
             msgbox.showinfo("Create status","Comment added Unsuccesfull")
       
-    B=tk.Tk()
-    B.title("Mental_Coach")
-    B.geometry("800x600")
+    E=tk.Tk()
+    E.title("Mental_Coach")
+    E.geometry("400x400")
 
-    Label1 = tk.Label(B, text ="AddComment")
-    Label1.place(x = 50, y = 300)
+    Label1 = tk.Label(E, text ="AddComment")
+    Label1.place(x = 10, y = 100)
     
-    Testname = tk.Entry(B, width = 35)
-    Testname.place(x = 200, y = 300, width = 200)
+    Testname = tk.Entry(E, width = 35)
+    Testname.place(x = 100, y = 100, width = 200)
     
-    submitbtn = tk.Button(B, text ="Submit", bg ='Magenta',command =submitact)
-    submitbtn.place(x = 350, y = 500, width = 150)
+    submitbtn = tk.Button(E, text ="Submit", bg ='blue',command =submitact)
+    submitbtn.place(x = 250, y = 200, width = 150)
     
-    B.mainloop()
+    E.mainloop()
 
 def getClientInfo(i):
 
@@ -118,7 +118,7 @@ def getClientInfo(i):
     i = 0
     for client in connection: 
         for j in range(len(client)):
-            e = Entry(clientPlans,width=20, fg='Magenta')
+            e = Entry(clientPlans,width=20, fg='blue')
             e.grid(row=i, column=j) 
             e.insert(END, client[j])
             x1 = 10+j*120
@@ -131,12 +131,12 @@ def getClientInfo(i):
     
   
     createcommentButton = tk.Button(clientPlans, text ="Give comment on mental health",
-                        bg ='Magenta', command=lambda:GiveComment(client_id)) 
+                        bg ='blue', command=lambda:GiveComment(client_id)) 
     createcommentButton.place(x = 150, y = 220, width = 200)
 
     viewPrescriptionPlanButton = tk.Button(clientPlans, text ="View comment of Client",
-                        bg ='Magenta', command=lambda:viewcomment(client_id)) 
-    viewPrescriptionPlanButton.place(x = 300, y = 220, width = 200)
+                        bg ='blue', command=lambda:viewcomment(client_id)) 
+    viewPrescriptionPlanButton.place(x = 400, y = 220, width = 200)
 
   
     createFeedbackButton = tk.Button(clientPlans, text ="Feedback to Client",
@@ -155,7 +155,7 @@ def getClientInfo(i):
 # Mental_coach home page 
 
 mental_coach = tk.Tk()
-mental_coach.title("doctor")
+mental_coach.title("Mental Coach")
 mental_coach.geometry("1300x900") 
 my_connect = mysql.connect(host="localhost", user="root", passwd=local_dB_password , database="fitnessstudio" )
 connection = my_connect.cursor()
@@ -198,7 +198,7 @@ for client in myresult:
     
     for j in range(len(client)):
         
-        e = Entry(mental_coach,width=20, fg='Magenta')
+        e = Entry(mental_coach,width=20, fg='blue')
         e.grid(row=i, column=j) 
         e.insert(END, client[j])
         x1 = 10+j*120

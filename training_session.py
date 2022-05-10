@@ -14,10 +14,10 @@ parser.add_argument("--pw", help="Local password for DB engine")
 parser.add_argument("--alias", help = "python alias")
 args = parser.parse_args()
 user = args.input
-#python_alias= args.alias
-python_alias="python3"
-#local_DB_password = args.pw
-local_DB_password = "password"
+python_alias= args.alias
+#python_alias="python3"
+local_DB_password = args.pw
+#local_DB_password = "password"
 
 log_file = "training_session.txt"
 log_fh = logging.FileHandler(log_file)
@@ -71,7 +71,7 @@ def print_answers():
         tkmb.showinfo("title", "Please upgrade your membership first!")
         #wait(10)
         root.destroy()
-        call([python_alias,"premium.py","--input", user, "--pw",local_DB_password])
+        call([python_alias,"Premium.py","--input", user, "--pw",local_DB_password, "--alias", python_alias])
         #call([python_alias,"admin_login.py","--input", user, "--pw",local_DB_password])
 
 root = tk.Tk()
